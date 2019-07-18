@@ -5,7 +5,10 @@ project("Datadog.Trace.ClrProfiler.Native" VERSION 1.7.0)
 
 add_compile_options(-std=c++11 -fPIC -fms-extensions)
 add_compile_options(-DBIT64 -DPAL_STDCPP_COMPAT -DPLATFORM_UNIX -DUNICODE)
-add_compile_options(-Wno-invalid-noreturn -Wno-macro-redefined)
+add_compile_options(-Wno-invalid-noreturn -Wno-macro-redefined -Wno-pragma-pack)
+
+find_package(nlohmann_json CONFIG REQUIRED)
+find_package(re2 CONFIG REQUIRED)
 
 SET(MANAGED_LOADER_DIRECTORY
     ${CMAKE_SOURCE_DIR}/../bin/ProfilerResources/netcoreapp2.0
@@ -54,13 +57,12 @@ target_include_directories("Datadog.Trace.ClrProfiler.Native.static"
     PUBLIC ../../lib/coreclr/src/pal/prebuilt/inc
     PUBLIC ../../lib/coreclr/src/pal/inc
     PUBLIC ../../lib/coreclr/src/inc
-    PUBLIC $<BUILD_INTERFACE:/opt/re2>
-    PUBLIC $<BUILD_INTERFACE:/opt/json/include>
 )
 target_link_libraries("Datadog.Trace.ClrProfiler.Native.static"
-    /opt/re2/obj/libre2.a
     -static-libgcc
     -static-libstdc++
+    nlohmann_json nlohmann_json::nlohmann_json
+    re2::re2
 )
 
 add_library("Datadog.Trace.ClrProfiler.Native" SHARED

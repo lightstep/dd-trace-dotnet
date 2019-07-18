@@ -1,56 +1,32 @@
-FROM ubuntu:14.04
+FROM ubuntu:18.04
 
 RUN apt-get update && \
-    apt-get install -y \
-        git \
-        wget
+    apt-get install -y git wget gnupg make curl unzip tar
 
-RUN echo "deb http://llvm.org/apt/trusty/ llvm-toolchain-trusty-3.9 main" | sudo tee /etc/apt/sources.list.d/llvm.list
-RUN wget -O - http://llvm.org/apt/llvm-snapshot.gpg.key | sudo apt-key add -
-RUN sudo apt-get update
+RUN echo "deb http://apt.llvm.org/bionic/ llvm-toolchain-bionic-7 main" | tee /etc/apt/sources.list.d/llvm.list
+RUN wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | apt-key add -
 
-RUN sudo apt-get install -y \
-    cmake \
-    llvm-3.9 \
-    clang-3.9 \
-    lldb-3.9 \
-    liblldb-3.9-dev \
-    libunwind8 \
-    libunwind8-dev \
-    gettext \
-    libicu-dev \
-    liblttng-ust-dev \
-    libcurl4-openssl-dev \
-    libssl-dev \
-    libnuma-dev \
-    libkrb5-dev
+RUN apt-get update && \
+    apt-get install -y clang-7 lldb-7 lld-7
 
-RUN cd /usr/lib/llvm-3.9/lib && ln -s ../../x86_64-linux-gnu/liblldb-3.9.so.1 liblldb-3.9.so.1
-
-RUN apt-get update && apt-get install -y \
-    python-software-properties \
-    software-properties-common
-
-RUN add-apt-repository ppa:ubuntu-toolchain-r/test && \
-    apt-get update && \
-    apt-get install -y \
-        curl \
-        ninja-build
-# cmake
-RUN apt-get remove -y cmake && \
-    curl -o /tmp/cmake.sh https://cmake.org/files/v3.12/cmake-3.12.3-Linux-x86_64.sh && \
-    sh /tmp/cmake.sh --prefix=/usr/local --exclude-subdir --skip-license
-
-# libraries
+ENV CXX=clang++-7
+ENV CC=clang-7
 
 RUN mkdir -p /opt
-ENV CXX=clang++-3.9
-ENV CC=clang-3.9
 
-# - nlohmann/json
-RUN cd /opt && git clone --depth 1 --branch v3.3.0 https://github.com/nlohmann/json.git
-# RUN cd /opt/json && cmake -G Ninja . && cmake --build .
+# vcpkg
+RUN cd /opt && \
+    git clone https://github.com/Microsoft/vcpkg.git && \
+    cd vcpkg && \
+    ./bootstrap-vcpkg.sh
 
-# - re2
-RUN cd /opt && git clone --depth 1 --branch 2018-10-01 https://github.com/google/re2.git
-RUN cd /opt/re2 && env CXXFLAGS="-O3 -g -fPIC" make
+RUN /opt/vcpkg/vcpkg integrate install
+
+# libraries
+RUN cd /opt/vcpkg && \
+    ./vcpkg install nlohmann-json re2
+
+# cmake
+RUN apt-get remove -y cmake && \
+    wget -nv -O /tmp/cmake.sh https://github.com/Kitware/CMake/releases/download/v3.14.5/cmake-3.14.5-Linux-x86_64.sh && \
+    sh /tmp/cmake.sh --prefix=/usr/local --exclude-subdir --skip-license
