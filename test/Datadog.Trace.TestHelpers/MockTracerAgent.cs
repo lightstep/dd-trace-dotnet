@@ -93,7 +93,7 @@ namespace Datadog.Trace.TestHelpers
             var minimumOffset =
                 new DateTimeOffset(minDateTime ?? DateTime.MinValue).ToUnixTimeNanoseconds();
 
-            IImmutableList<Span> relevantSpans = null;
+            IImmutableList<Span> relevantSpans = ImmutableList<Span>.Empty;
 
             while (DateTime.Now < deadline)
             {
