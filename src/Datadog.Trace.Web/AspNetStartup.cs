@@ -1,7 +1,7 @@
 using System.Web;
 using Datadog.Trace.Web;
 
-[assembly: PreApplicationStartMethod(typeof(AspNetStartup), "Register")]
+[assembly: PreApplicationStartMethod(typeof(AspNetStartup), nameof(AspNetStartup.Register))]
 
 namespace Datadog.Trace.Web
 {
@@ -15,7 +15,9 @@ namespace Datadog.Trace.Web
         /// </summary>
         public static void Register()
         {
-            Tracer.Instance = new Tracer(null, null, null, new AspNetScopeManager());
+            var scopeManager = new AspNetScopeManager();
+
+            Tracer.Instance = new Tracer(settings: null, agentWriter: null, sampler: null, scopeManager);
 
             if (Tracer.Instance.Settings.IsIntegrationEnabled(AspNetHttpModule.IntegrationName))
             {
