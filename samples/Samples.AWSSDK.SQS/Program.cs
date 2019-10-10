@@ -110,10 +110,10 @@ namespace Samples.AWSSDK.SQS
         {
             var sendRequest = new SendMessageRequest();
             sendRequest.QueueUrl = queueUrl;
-            sendRequest.MessageBody = "SendMessage";
+            sendRequest.MessageBody = "SendMessage_SendMessageRequest";
 
             var sendMessageResponse = sqsClient.SendMessage(sendRequest);
-            Console.WriteLine($"HTTP status code {sendMessageResponse.HttpStatusCode} for SendMessage request for '{sendRequest.MessageBody}'");
+            sendMessageResponse = sqsClient.SendMessage(queueUrl, "SendMessage_string_string");
         }
 
         // Send a batch of messages to the queue
