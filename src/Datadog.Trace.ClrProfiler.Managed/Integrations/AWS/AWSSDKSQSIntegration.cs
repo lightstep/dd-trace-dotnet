@@ -79,7 +79,7 @@ namespace Datadog.Trace.ClrProfiler.Integrations
                 try
                 {
                     var responseContext = instrumentedMethod(runtimePipeline, executionContext);
-                    AfterMethod(executionContext.GetProperty("ResponseContext"));
+                    AfterMethod(scope.Span, executionContext);
 
                     return responseContext;
                 }
@@ -158,7 +158,7 @@ namespace Datadog.Trace.ClrProfiler.Integrations
                 try
                 {
                     var response = await instrumentedMethod(runtimePipeline, executionContext).ConfigureAwait(false);
-                    AfterMethod(executionContext.GetProperty("ResponseContext"));
+                    AfterMethod(scope.Span, executionContext);
 
                     return response;
                 }
@@ -186,22 +186,16 @@ namespace Datadog.Trace.ClrProfiler.Integrations
             {
                 scope = Tracer.Instance.StartActive(OperationName, serviceName: serviceName);
                 var span = scope.Span;
+                span.SetTag(Tags.SpanKind, SpanKinds.Client);
+
+                // AWS tags
+                var sdkRequest = executionContext.GetProperty("RequestContext");
+                var awsQueueName = sdkRequest?.GetProperty("OriginalRequest").GetProperty<string>("QueueName").GetValueOrDefault();
+                var awsQueueUrl = sdkRequest?.GetProperty("OriginalRequest").GetProperty<string>("QueueUrl").GetValueOrDefault();
+
                 span.SetTag("aws.agent", AgentName);
-                // span.SetTag("aws.operation", TODO: ask Tyler what should be here);
-                // attributes.getattribute
-
-                // executionContext.GetProperty("RequestContext").OriginalRequest.QueueName
-                object sdkRequest = executionContext.GetProperty("RequestContext");
-
-                /*
-                if (sdkRequest.GetProperty<string>("RequestName").Contains("CreateQueueRequest"))
-                {
-                    sdkRequest.GetProperty("Request").GetProperty<string>("ServiceName");
-                    // SetTag("aws.queue.name", sdkRequest.Request.OriginalRequest.QueueName)
-                }
-                */
-
-                // span.SetTag("aws.queue.url", queueUrl);
+                span.SetTag("aws.queue.name", awsQueueName);
+                span.SetTag("aws.queue.url", awsQueueUrl);
 
                 // set analytics sample rate if enabled
                 var analyticsSampleRate = tracer.Settings.GetIntegrationAnalyticsSampleRate(IntegrationName, enabledWithGlobalSetting: false);
@@ -215,14 +209,44 @@ namespace Datadog.Trace.ClrProfiler.Integrations
             return scope;
         }
 
-        private static void AfterMethod(object responseContext)
+        private static void AfterMethod(Span span, object executionContext)
         {
-            // do stuff
-            // responseContext.Response.QueueUrl
-            // if (responseContext.response.Context.Response.ResponseMetadata.RequestId != null)
-            // {
-            //   setTag("aws.requestId", responseContext.response.Context.Response.ResponseMetadata.RequestId);
-            // }
+            var sdkRequest = executionContext.GetProperty("RequestContext");
+
+            // Additional AWS tags not available until returning from the request (at least at the current callsite)
+            var awsOperation = sdkRequest.GetProperty("Request").GetProperty<string>("RequestName").GetValueOrDefault();
+            var awsService = sdkRequest.GetProperty("Request").GetProperty<string>("ServiceName").GetValueOrDefault();
+
+            span.SetTag("aws.operation", awsOperation);
+            span.SetTag("aws.service", awsService);
+
+            // HTTP tags
+            // Callout: Should we keep these? Java Tracer seems to add these but this span
+            // is the parent of System.Net.WebRequest call that is properly traced
+            // Java source: https://github.com/DataDog/dd-trace-java/blob/master/dd-java-agent/instrumentation/aws-java-sdk-2.2/src/main/java8/datadog/trace/instrumentation/aws/v2/AwsSdkClientDecorator.java
+            // It uses the following HttpClientDecorator: https://github.com/DataDog/dd-trace-java/blob/master/dd-java-agent/agent-tooling/src/main/java/datadog/trace/agent/decorator/HttpClientDecorator.java
+            var endpointUri = sdkRequest.GetProperty("Request").GetProperty<System.Uri>("Endpoint").GetValueOrDefault();
+            var httpMethod = sdkRequest.GetProperty("Request").GetProperty<string>("HttpMethod").GetValueOrDefault();
+            var httpUrl = endpointUri?.AbsoluteUri;
+            var host = endpointUri?.Host;
+            var port = endpointUri?.Port.ToString();
+
+            // span.SetTag(Tags.HttpUrl, httpUrl);
+            // span.SetTag(Tags.HttpMethod, httpMethod);
+            // span.SetTag(Tags.OutHost, host);
+            // span.SetTag(Tags.OutPort, port);
+
+            // var sdkRequest = responseContext.GetProperty("Response").GetProperty("Context")
+            // var queueName = sdkRequest?.GetProperty("OriginalRequest").GetProperty<string>("QueueName").GetValueOrDefault();
+            // var queueUrl = sdkRequest?.GetProperty("OriginalRequest").GetProperty<string>("QueueUrl").GetValueOrDefault();
+
+            // span.SetTag("aws.requestId", queueName);
+            // span.SetTag("aws.queue.url", queueUrl);
+            // span.SetTag("aws.service", AgentName); // TODO: Implement
+            // span.SetTag("aws.operation", AgentName); // TODO: Implement
+
+            var requestId = executionContext.GetProperty("ResponseContext").GetProperty("Response").GetProperty("ResponseMetadata").GetProperty<string>("RequestId").GetValueOrDefault();
+            span.SetTag("aws.requestId", requestId);
         }
     }
 }
