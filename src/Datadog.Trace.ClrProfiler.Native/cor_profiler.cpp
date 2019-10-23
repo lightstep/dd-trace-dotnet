@@ -697,6 +697,15 @@ HRESULT STDMETHODCALLTYPE CorProfiler::JITCompilationStarted(
       // replace with a call to the instrumentation wrapper
       pInstr->m_Arg32 = wrapper_method_ref;
 
+      // after the call is made, unbox any valuetypes
+      mdToken typeToken;
+      if (UnboxReturnValue(module_metadata->metadata_import,
+                           module_metadata->metadata_emit,
+                           caller, target, &typeToken)) {
+        rewriter_wrapper.SetILPosition(pInstr->m_pNext);
+        rewriter_wrapper.UnboxAny(typeToken);
+      }
+
       modified = true;
 
       Info("*** JITCompilationStarted() replaced calls from ", caller.type.name,

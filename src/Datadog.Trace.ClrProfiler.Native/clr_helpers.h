@@ -168,6 +168,18 @@ static Enumerator<mdAssemblyRef> EnumAssemblyRefs(
       });
 }
 
+static Enumerator<mdModuleRef> EnumGenericParams(
+    const ComPtr<IMetaDataImport2>& metadata_import, mdToken tk) {
+  return Enumerator<mdGenericParam>(
+      [metadata_import, tk](HCORENUM* ptr, mdGenericParam arr[], ULONG max,
+                        ULONG* cnt) -> HRESULT {
+        return metadata_import->EnumGenericParams(ptr, tk, arr, max, cnt);
+      },
+      [metadata_import, tk](HCORENUM ptr) -> void {
+        metadata_import->CloseEnum(ptr);
+      });
+}
+
 struct RuntimeInformation {
   COR_PRF_RUNTIME_TYPE runtime_type;
   USHORT major_version;
@@ -354,6 +366,12 @@ bool DisableOptimizations();
 bool TryParseSignatureTypes(const ComPtr<IMetaDataImport2>& metadata_import,
                          const FunctionInfo& function_info,
                          std::vector<WSTRING>& signature_result);
+
+bool UnboxReturnValue(const ComPtr<IMetaDataImport2>& metadata_import,
+                      const ComPtr<IMetaDataEmit2>& metadata_emit,
+                      const FunctionInfo &caller_function_info,
+                      const FunctionInfo &target_function_info,
+                      mdToken* ret_type_token);
 }  // namespace trace
 
 #endif  // DD_CLR_PROFILER_CLR_HELPERS_H_
