@@ -5,6 +5,7 @@ using Datadog.Trace;
 using Datadog.Trace.ClrProfiler;
 using MongoDB.Bson;
 using MongoDB.Driver;
+using MongoDB.Driver.Core.Operations;
 
 namespace Samples.MongoDB
 {
@@ -67,7 +68,27 @@ namespace Samples.MongoDB
                 var find = collection.Find(allFilter);
                 var allDocuments = find.ToList();
                 Console.WriteLine(allDocuments.FirstOrDefault());
+
+                HelperToIsolateProfiler(collection);
 #endif
+            }
+        }
+
+        private static void HelperToIsolateProfiler(IMongoCollection<BsonDocument> collection)
+        {
+            using (var cursorScope = Tracer.Instance.StartActive("cursor-calls", serviceName: "Samples.MongoDB"))
+            {
+                // Run an explain query to invoke problematic MongoDB.Driver.Core.Operations.FindOpCodeOperation<TDocument>
+                // https://stackoverflow.com/questions/49506857/how-do-i-run-an-explain-query-with-the-2-4-c-sharp-mongo-driver
+                var options = new FindOptions
+                {
+                    Modifiers = new BsonDocument("$explain", true)
+                };
+                var cursor = collection.Find(x => true, options).ToCursor();
+                foreach (var document in cursor.ToEnumerable())
+                {
+                    Console.WriteLine(document);
+                }
             }
         }
 
