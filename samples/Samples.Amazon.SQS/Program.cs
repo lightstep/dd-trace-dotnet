@@ -9,7 +9,7 @@ using Amazon.SQS;
 using Amazon.SQS.Model;
 using Datadog.Trace;
 
-namespace Samples.AWSSDK.SQS
+namespace Samples.Amazon.SQS
 {
     public class Program
     {
@@ -64,7 +64,7 @@ namespace Samples.AWSSDK.SQS
         }
 
         #region Synchronous Methods (.NET Framework)
-        #if NETFRAMEWORK
+#if NETFRAMEWORK
         static void CreateSqsQueue()
         {
             var createQueueRequest = new CreateQueueRequest();
@@ -196,7 +196,7 @@ namespace Samples.AWSSDK.SQS
             Console.WriteLine($"DeleteQueue HTTP status code: {deleteQueueResponse.HttpStatusCode}");
         }
 
-        #endif
+#endif
         #endregion
         #region Async Methods (.NET Framework and .NET Core)
         static async Task CreateSqsQueueAsync()

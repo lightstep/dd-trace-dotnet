@@ -6,11 +6,12 @@ using Xunit;
 
 namespace Datadog.Trace.ClrProfiler.IntegrationTests
 {
-    public class WebServerTestHelpers
+    public class SpanTestHelpers
     {
-        public static void AssertExpectationsMet(
-            List<WebServerSpanExpectation> expectations,
+        public static void AssertExpectationsMet<T>(
+            List<T> expectations,
             List<MockTracerAgent.Span> spans)
+            where T : SpanExpectation
         {
             Assert.True(spans.Count >= expectations.Count, $"Expected at least {expectations.Count} spans, received {spans.Count}");
 
@@ -20,34 +21,36 @@ namespace Datadog.Trace.ClrProfiler.IntegrationTests
             {
                 var possibleSpans =
                     spans
-                       .Where(s => expectation.IsSimpleMatch(s))
+                       .Where(s => !s.Inspected)
+                       .Where(s => expectation.ShouldInspect(s))
                        .ToList();
 
-                var count = possibleSpans.Count();
+                var count = possibleSpans.Count;
+
+                var detail = $"({expectation.Detail()})";
 
                 if (count == 0)
                 {
-                    failures.Add($"No spans for resource: {expectation.ResourceName}");
+                    failures.Add($"No spans for: {detail}");
                     continue;
                 }
 
-                if (count > 1)
-                {
-                    failures.Add($"Too many spans for resource: {expectation.ResourceName}");
-                    continue;
-                }
+                var resultSpan = possibleSpans.First();
 
-                var resultSpan = possibleSpans.Single();
+                resultSpan.Inspected = true;
 
-                if (!expectation.IsMatch(resultSpan, out string failureMessage))
+                if (!expectation.MeetsExpectations(resultSpan, out var failureMessage))
                 {
-                    failures.Add($"{expectation.ResourceName} failed with: {failureMessage}");
+                    failures.Add($"{detail} failed with: {failureMessage}");
                 }
             }
 
             var finalMessage = Environment.NewLine + string.Join(Environment.NewLine, failures.Select(f => " - " + f));
 
             Assert.True(!failures.Any(), finalMessage);
+
+            var uninspectedSpans = spans.Count(s => s.Inspected);
+            Assert.True(uninspectedSpans == 0, $"There were {uninspectedSpans} spans unaccounted for.");
         }
     }
 }
