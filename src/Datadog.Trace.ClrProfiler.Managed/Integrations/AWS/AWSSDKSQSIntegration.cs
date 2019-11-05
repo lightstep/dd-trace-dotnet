@@ -17,13 +17,16 @@ namespace Datadog.Trace.ClrProfiler.Integrations
         private const string Major3 = "3";
         private const string Major3Minor3 = "3.3";
 
+        private const string InvokeSyncMethod = "InvokeSync";
+        private const string InvokeAsyncMethod = "InvokeAsync";
+
         private const string ServiceName = "aws";
         private const string AWSCoreAssemblyName = "AWSSDK.Core";
         private const string RuntimePipelineTypeName = "Amazon.Runtime.Internal.RuntimePipeline";
         private const string IExecutionContextTypeName = "Amazon.Runtime.IExecutionContext";
         private const string IResponseContextTypeName = "Amazon.Runtime.IResponseContext";
 
-        private static readonly ILog Log = LogProvider.GetCurrentClassLogger();
+        private static readonly Vendors.Serilog.ILogger Log = DatadogLogging.GetLogger(typeof(AWSSDKSQSIntegration));
 
         /// <summary>
         /// Wrap the original method by adding instrumentation code around it.
@@ -37,7 +40,7 @@ namespace Datadog.Trace.ClrProfiler.Integrations
         [InterceptMethod(
             TargetAssembly = AWSCoreAssemblyName,
             TargetType = RuntimePipelineTypeName,
-            TargetMethod = "InvokeSync",
+            TargetMethod = InvokeSyncMethod,
             TargetSignatureTypes = new[] { IResponseContextTypeName, IExecutionContextTypeName },
             TargetMinimumVersion = Major3Minor3,
             TargetMaximumVersion = Major3)]
@@ -55,7 +58,7 @@ namespace Datadog.Trace.ClrProfiler.Integrations
             {
                 instrumentedMethod =
                     MethodBuilder<Func<object, object, object>>
-                    .Start(moduleVersionPtr, mdToken, opCode, "InvokeSync")
+                    .Start(moduleVersionPtr, mdToken, opCode, InvokeSyncMethod)
                     .WithConcreteType(runtimePipelineType)
                     .WithParameters(executionContext)
                     .WithNamespaceAndNameFilters(IResponseContextTypeName, IExecutionContextTypeName)
@@ -69,7 +72,7 @@ namespace Datadog.Trace.ClrProfiler.Integrations
                     mdToken: mdToken,
                     opCode: opCode,
                     instrumentedType: RuntimePipelineTypeName,
-                    methodName: "InvokeSync",
+                    methodName: InvokeSyncMethod,
                     instanceType: runtimePipelineType.AssemblyQualifiedName);
                 throw;
             }
@@ -104,8 +107,8 @@ namespace Datadog.Trace.ClrProfiler.Integrations
         [InterceptMethod(
             TargetAssembly = AWSCoreAssemblyName,
             TargetType = RuntimePipelineTypeName,
-            TargetMethod = "InvokeAsync",
-            TargetSignatureTypes = new[] { "System.Threading.Tasks.Task`1<T>", IExecutionContextTypeName },
+            TargetMethod = InvokeAsyncMethod,
+            TargetSignatureTypes = new[] { ClrNames.GenericTask, IExecutionContextTypeName },
             TargetMinimumVersion = Major3Minor3,
             TargetMaximumVersion = Major3)]
         public static object InvokeAsync<T>(
@@ -133,7 +136,7 @@ namespace Datadog.Trace.ClrProfiler.Integrations
             {
                 instrumentedMethod =
                     MethodBuilder<Func<object, object, Task<T>>>
-                    .Start(moduleVersionPtr, mdToken, opCode, "InvokeAsync")
+                    .Start(moduleVersionPtr, mdToken, opCode, InvokeAsyncMethod)
                     .WithConcreteType(runtimePipelineType)
                     .WithMethodGenerics(genericArgument)
                     .WithParameters(executionContext)
@@ -148,7 +151,7 @@ namespace Datadog.Trace.ClrProfiler.Integrations
                     mdToken: mdToken,
                     opCode: opCode,
                     instrumentedType: RuntimePipelineTypeName,
-                    methodName: "InvokeAsync",
+                    methodName: InvokeAsyncMethod,
                     instanceType: runtimePipelineType.AssemblyQualifiedName);
                 throw;
             }
@@ -203,7 +206,7 @@ namespace Datadog.Trace.ClrProfiler.Integrations
             }
             catch (Exception ex)
             {
-                Log.ErrorException("Error creating or populating scope.", ex);
+                Log.Error(ex, "Error creating or populating scope.");
             }
 
             return scope;
