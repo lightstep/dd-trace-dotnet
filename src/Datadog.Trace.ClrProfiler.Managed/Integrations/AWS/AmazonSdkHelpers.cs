@@ -22,7 +22,7 @@ namespace Datadog.Trace.ClrProfiler.Integrations
 
             if (input != null && input.StartsWith(amazonPrefix))
             {
-                return input.Substring(amazonPrefix.Length, input.Length);
+                return input.Substring(amazonPrefix.Length, input.Length - amazonPrefix.Length);
             }
 
             return input;
