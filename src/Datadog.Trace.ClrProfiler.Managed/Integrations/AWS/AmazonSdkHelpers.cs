@@ -18,11 +18,11 @@ namespace Datadog.Trace.ClrProfiler.Integrations
 
         public static string TrimAmazonPrefix(string input)
         {
-            const string amazonPrefix = "Amazon";
+            const string amazonPrefix = "Amazon.";
 
             if (input != null && input.StartsWith(amazonPrefix))
             {
-                return input.Substring(0, amazonPrefix.Length);
+                return input.Substring(amazonPrefix.Length, input.Length);
             }
 
             return input;
