@@ -220,6 +220,41 @@ namespace Datadog.Trace.ClrProfiler.IntegrationTests
             _environmentHelper.DebugModeEnabled = true;
         }
 
+        protected async Task AssertHttpSpan(
+            string path,
+            MockTracerAgent agent,
+            int httpPort,
+            HttpStatusCode expectedHttpStatusCode,
+            string expectedSpanType,
+            string expectedOperationName,
+            string expectedResourceName)
+        {
+            IImmutableList<MockTracerAgent.Span> spans;
+
+            using (var httpClient = new HttpClient())
+            {
+                // disable tracing for this HttpClient request
+                httpClient.DefaultRequestHeaders.Add(HttpHeaderNames.TracingEnabled, "false");
+                var testStart = DateTime.UtcNow;
+                var response = await httpClient.GetAsync($"http://localhost:{httpPort}" + path);
+                var content = await response.Content.ReadAsStringAsync();
+                Output.WriteLine($"[http] {response.StatusCode} {content}");
+                Assert.Equal(expectedHttpStatusCode, response.StatusCode);
+
+                spans = agent.WaitForSpans(
+                    count: 1,
+                    minDateTime: testStart,
+                    operationName: expectedOperationName);
+
+                Assert.True(spans.Count == 1, "expected one span");
+            }
+
+            MockTracerAgent.Span span = spans[0];
+            Assert.Equal(expectedSpanType, span.Type);
+            Assert.Equal(expectedOperationName, span.Name);
+            Assert.Equal(expectedResourceName, span.Resource);
+        }
+
         internal class TupleList<T1, T2> : List<Tuple<T1, T2>>
         {
             public void Add(T1 item, T2 item2)
