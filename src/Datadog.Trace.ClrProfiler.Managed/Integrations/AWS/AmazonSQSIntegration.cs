@@ -11,7 +11,7 @@ namespace Datadog.Trace.ClrProfiler.Integrations
     public static class AmazonSqsIntegration
     {
         private const string IntegrationName = "AWS";
-        private const string OperationName = "aws.command";
+        private const string OperationName = "aws.http";
         private const string AgentName = "dotnet-aws-sdk";
 
         private const string Major3 = "3";
@@ -199,7 +199,7 @@ namespace Datadog.Trace.ClrProfiler.Integrations
                 var serviceName = $"{tracer.DefaultServiceName}-{ServiceName}";
                 scope = Tracer.Instance.StartActive(OperationName, serviceName: serviceName);
                 var span = scope.Span;
-                span.Type = SpanTypes.Http; // TODO, is this right?
+                span.Type = SpanTypes.Http;
                 span.SetTag(Tags.SpanKind, SpanKinds.Client);
 
                 // AWS tags
@@ -239,11 +239,14 @@ namespace Datadog.Trace.ClrProfiler.Integrations
 
                 if (request != null)
                 {
-                    var awsOperation = request?.GetProperty<string>("RequestName").GetValueOrDefault();
-                    var awsService = request?.GetProperty<string>("ServiceName").GetValueOrDefault();
+                    var awsOperation = request.GetProperty<string>("RequestName").GetValueOrDefault();
+                    var awsService = request.GetProperty<string>("ServiceName").GetValueOrDefault();
 
+                    awsOperation = AmazonSdkHelpers.TrimRequestFromEnd(awsOperation);
                     span.SetTag(AwsSdkTags.OperationName, awsOperation);
                     span.SetTag(AwsSdkTags.ServiceName, awsService);
+
+                    span.ResourceName = $"{AmazonSdkHelpers.TrimAmazonPrefix(awsService)}.{awsOperation}";
                 }
 
                 var requestId = executionContext.GetProperty("ResponseContext").GetProperty("Response").GetProperty("ResponseMetadata").GetProperty<string>("RequestId").GetValueOrDefault();

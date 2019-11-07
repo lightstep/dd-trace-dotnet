@@ -1,26 +1,30 @@
+using System.Collections.Generic;
+using Datadog.Trace.TestHelpers;
+
 namespace Datadog.Trace.ClrProfiler.IntegrationTests
 {
     public class AwsSdkExpectation : SpanExpectation
     {
-        public AwsSdkExpectation(string serviceName, string operationName, string type)
-        : base(serviceName, operationName, type)
+        public const string IntegrationOperationName = "aws.http";
+
+        public AwsSdkExpectation(string serviceName)
+        : base(serviceName, IntegrationOperationName, SpanTypes.Http)
         {
-            // Expectations for all spans of a queue client variety should go here
             RegisterTagExpectation(Tags.SpanKind, expected: SpanKinds.Client, when: Always);
         }
 
         public class Commands
         {
-            public const string CreateQueueRequest = "CreateQueueRequest";
-            public const string ListQueuesRequest = "ListQueuesRequest";
-            public const string GetQueueUrlRequest = "GetQueueUrlRequest";
-            public const string SendMessageRequest = "SendMessageRequest";
-            public const string DeleteMessageRequest = "DeleteMessageRequest";
-            public const string SendMessageBatchRequest = "SendMessageBatchRequest";
-            public const string ReceiveMessageRequest = "ReceiveMessageRequest";
-            public const string DeleteMessageBatchRequest = "DeleteMessageBatchRequest";
-            public const string PurgeQueueRequest = "PurgeQueueRequest";
-            public const string DeleteQueueRequest = "DeleteQueueRequest";
+            public const string CreateQueueRequest = "CreateQueue";
+            public const string ListQueuesRequest = "ListQueues";
+            public const string GetQueueUrlRequest = "GetQueueUrl";
+            public const string SendMessageRequest = "SendMessage";
+            public const string DeleteMessageRequest = "DeleteMessage";
+            public const string SendMessageBatchRequest = "SendMessageBatch";
+            public const string ReceiveMessageRequest = "ReceiveMessage";
+            public const string DeleteMessageBatchRequest = "DeleteMessageBatch";
+            public const string PurgeQueueRequest = "PurgeQueue";
+            public const string DeleteQueueRequest = "DeleteQueue";
         }
     }
 }

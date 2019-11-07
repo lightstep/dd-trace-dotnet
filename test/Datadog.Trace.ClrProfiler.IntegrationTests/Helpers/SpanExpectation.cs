@@ -17,6 +17,8 @@ namespace Datadog.Trace.ClrProfiler.IntegrationTests
             Type = type;
 
             // Expectations for all spans regardless of type should go here
+            RegisterDelegateExpectation(ExpectBasicSpanDataExists);
+
             RegisterCustomExpectation(nameof(OperationName), actual: s => s.Name, expected => OperationName);
             RegisterCustomExpectation(nameof(ServiceName), actual: s => s.Service, expected => ServiceName);
             RegisterCustomExpectation(nameof(Type), actual: s => s.Type, expected => Type);
@@ -171,6 +173,39 @@ namespace Datadog.Trace.ClrProfiler.IntegrationTests
             }
 
             return null;
+        }
+
+        private IEnumerable<string> ExpectBasicSpanDataExists(MockTracerAgent.Span span)
+        {
+            if (string.IsNullOrWhiteSpace(span.Resource))
+            {
+                yield return "Resource must be set.";
+            }
+
+            if (string.IsNullOrWhiteSpace(span.Type))
+            {
+                yield return "Type must be set.";
+            }
+
+            if (string.IsNullOrWhiteSpace(span.Name))
+            {
+                yield return "Name must be set.";
+            }
+
+            if (string.IsNullOrWhiteSpace(span.Service))
+            {
+                yield return "Service must be set.";
+            }
+
+            if (span.TraceId == default)
+            {
+                yield return "TraceId must be set.";
+            }
+
+            if (span.SpanId == default)
+            {
+                yield return "SpanId must be set.";
+            }
         }
     }
 }

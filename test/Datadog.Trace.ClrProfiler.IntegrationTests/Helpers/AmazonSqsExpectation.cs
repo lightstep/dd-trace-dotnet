@@ -6,8 +6,8 @@ namespace Datadog.Trace.ClrProfiler.IntegrationTests
 {
     public class AmazonSqsExpectation : AwsSdkExpectation
     {
-        public AmazonSqsExpectation(string serviceName, string operationName, string type)
-        : base(serviceName, operationName, type)
+        public AmazonSqsExpectation(string serviceName)
+        : base(serviceName)
         {
             TagShouldExist(AwsSdkTags.OperationName, Always);
             TagShouldExist(AwsSdkTags.AgentName, Always);
