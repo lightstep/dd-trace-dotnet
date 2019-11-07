@@ -6,7 +6,7 @@ namespace Datadog.Trace.ClrProfiler.IntegrationTests
         : base(serviceName, operationName, type)
         {
             // Expectations for all spans of a queue client variety should go here
-            RegisterTagExpectation(Tags.SpanKind, expected: SpanKinds.Client);
+            RegisterTagExpectation(Tags.SpanKind, expected: SpanKinds.Client, when: Always);
         }
 
         public class Commands
