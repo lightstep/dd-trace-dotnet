@@ -102,7 +102,7 @@ namespace Datadog.Trace.ClrProfiler.IntegrationTests
             });
         }
 
-        public void RegisterDelegateExpectation(Func<MockTracerAgent.Span, List<string>> expectation)
+        public void RegisterDelegateExpectation(Func<MockTracerAgent.Span, IEnumerable<string>> expectation)
         {
             Assertions.Add(span =>
             {
