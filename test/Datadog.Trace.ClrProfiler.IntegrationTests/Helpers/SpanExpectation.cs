@@ -54,7 +54,7 @@ namespace Datadog.Trace.ClrProfiler.IntegrationTests
         /// </summary>
         /// <param name="span">The span on which to filter.</param>
         /// <returns>Whether the span qualifies for this expectation.</returns>
-        public virtual bool ShouldInspect(MockTracerAgent.Span span)
+        public virtual bool Matches(MockTracerAgent.Span span)
         {
             return span.Service == ServiceName
                 && span.Name == OperationName

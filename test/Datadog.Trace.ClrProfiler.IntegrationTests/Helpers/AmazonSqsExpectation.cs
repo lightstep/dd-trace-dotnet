@@ -32,11 +32,11 @@ namespace Datadog.Trace.ClrProfiler.IntegrationTests
 
         public string AwsOperation { get; set; }
 
-        public override bool ShouldInspect(MockTracerAgent.Span span)
+        public override bool Matches(MockTracerAgent.Span span)
         {
             return
                 GetTag(span, AmazonTags.OperationName) == AwsOperation
-             && base.ShouldInspect(span);
+             && base.Matches(span);
         }
 
         public override string Detail()
