@@ -1,10 +1,10 @@
 namespace Datadog.Trace.ClrProfiler.IntegrationTests
 {
-    public class AmazonExpectation : SpanExpectation
+    public class AwsExpectation : SpanExpectation
     {
         public const string IntegrationOperationName = "aws.http";
 
-        public AmazonExpectation(string serviceName)
+        public AwsExpectation(string serviceName)
         : base(serviceName, IntegrationOperationName, SpanTypes.Http)
         {
             RegisterTagExpectation(Tags.SpanKind, expected: SpanKinds.Client);

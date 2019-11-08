@@ -1,6 +1,6 @@
 namespace Datadog.Trace.ClrProfiler.Integrations
 {
-    internal static class AmazonTags
+    internal static class AwsTags
     {
         public const string AgentName = "aws.agent";
 

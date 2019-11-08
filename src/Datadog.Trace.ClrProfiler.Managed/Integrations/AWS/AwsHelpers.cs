@@ -2,7 +2,7 @@ using System;
 
 namespace Datadog.Trace.ClrProfiler.Integrations
 {
-    internal static class AmazonSdkHelpers
+    internal static class AwsHelpers
     {
         public static string TrimRequestFromEnd(string input)
         {

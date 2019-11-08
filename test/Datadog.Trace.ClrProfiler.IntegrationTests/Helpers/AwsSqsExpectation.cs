@@ -4,18 +4,18 @@ using Datadog.Trace.TestHelpers;
 
 namespace Datadog.Trace.ClrProfiler.IntegrationTests
 {
-    public class AmazonSqsExpectation : AmazonExpectation
+    public class AwsSqsExpectation : AwsExpectation
     {
-        public AmazonSqsExpectation(string serviceName)
+        public AwsSqsExpectation(string serviceName)
         : base(serviceName)
         {
-            TagShouldExist(AmazonTags.OperationName, Always);
-            TagShouldExist(AmazonTags.AgentName, Always);
-            TagShouldExist(AmazonTags.ServiceName, Always);
-            TagShouldExist(AmazonTags.RequestId, Always);
+            TagShouldExist(AwsTags.OperationName, Always);
+            TagShouldExist(AwsTags.AgentName, Always);
+            TagShouldExist(AwsTags.ServiceName, Always);
+            TagShouldExist(AwsTags.RequestId, Always);
 
             var creatingOrDeletingQueue = new HashSet<string> { Commands.CreateQueueRequest };
-            TagShouldExist(AmazonTags.SqsQueueName, when: span => creatingOrDeletingQueue.Contains(GetTag(span, AmazonTags.OperationName)));
+            TagShouldExist(AwsTags.SqsQueueName, when: span => creatingOrDeletingQueue.Contains(GetTag(span, AwsTags.OperationName)));
 
             var operationsAgainstQueue = new HashSet<string>
             {
@@ -25,7 +25,7 @@ namespace Datadog.Trace.ClrProfiler.IntegrationTests
                 Commands.DeleteMessageRequest,
                 Commands.DeleteMessageBatchRequest
             };
-            TagShouldExist(AmazonTags.SqsQueueUrl, when: span => operationsAgainstQueue.Contains(GetTag(span, AmazonTags.OperationName)));
+            TagShouldExist(AwsTags.SqsQueueUrl, when: span => operationsAgainstQueue.Contains(GetTag(span, AwsTags.OperationName)));
 
             IsTopLevel = false;
         }
@@ -35,7 +35,7 @@ namespace Datadog.Trace.ClrProfiler.IntegrationTests
         public override bool Matches(MockTracerAgent.Span span)
         {
             return
-                GetTag(span, AmazonTags.OperationName) == AwsOperation
+                GetTag(span, AwsTags.OperationName) == AwsOperation
              && base.Matches(span);
         }
 

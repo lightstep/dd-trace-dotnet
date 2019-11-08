@@ -7,7 +7,7 @@ using Amazon.SQS;
 using Amazon.SQS.Model;
 using Datadog.Trace;
 
-namespace Samples.Amazon.SQS
+namespace Samples.Aws.SQS
 {
     public class Program
     {

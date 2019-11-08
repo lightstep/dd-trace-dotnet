@@ -6,14 +6,14 @@ using Xunit.Abstractions;
 
 namespace Datadog.Trace.ClrProfiler.IntegrationTests.AWS
 {
-    public class AmazonSqsTests : TestHelper
+    public class AwsSqsTests : TestHelper
     {
-        private readonly List<AmazonSqsExpectation> _synchronousExpectations = new List<AmazonSqsExpectation>();
-        private readonly List<AmazonSqsExpectation> _asynchronousExpectations = new List<AmazonSqsExpectation>();
-        private readonly List<AmazonSqsExpectation> _expectations = new List<AmazonSqsExpectation>();
+        private readonly List<AwsSqsExpectation> _synchronousExpectations = new List<AwsSqsExpectation>();
+        private readonly List<AwsSqsExpectation> _asynchronousExpectations = new List<AwsSqsExpectation>();
+        private readonly List<AwsSqsExpectation> _expectations = new List<AwsSqsExpectation>();
 
-        public AmazonSqsTests(ITestOutputHelper output)
-            : base("Amazon.Sqs", output)
+        public AwsSqsTests(ITestOutputHelper output)
+            : base("Aws.Sqs", output)
         {
             _synchronousExpectations.Add(CreateExpectation("CreateQueue"));
             _synchronousExpectations.Add(CreateExpectation("ListQueues"));
@@ -60,16 +60,16 @@ namespace Datadog.Trace.ClrProfiler.IntegrationTests.AWS
             {
                 Assert.True(processResult.ExitCode >= 0, $"Process exited with code {processResult.ExitCode} and exception: {processResult.StandardError}");
 
-                var spans = agent.WaitForSpans(_expectations.Count, 500, operationName: AmazonExpectation.IntegrationOperationName);
+                var spans = agent.WaitForSpans(_expectations.Count, 500, operationName: AwsExpectation.IntegrationOperationName);
                 Assert.True(spans.Count >= _expectations.Count, $"Expecting at least {_expectations.Count} spans, only received {spans.Count}");
 
                 SpanTestHelpers.AssertExpectationsMet(_expectations, spans.ToList());
             }
         }
 
-        private static AmazonSqsExpectation CreateExpectation(string awsOperation)
+        private static AwsSqsExpectation CreateExpectation(string awsOperation)
         {
-            return new AmazonSqsExpectation("Samples.Amazon.Sqs-aws")
+            return new AwsSqsExpectation("Samples.Aws.Sqs-aws")
             {
                 AwsOperation = awsOperation,
                 ResourceName = $"SQS.{awsOperation}",
