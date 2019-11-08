@@ -140,8 +140,10 @@ namespace Datadog.Trace.ClrProfiler.IntegrationTests
         public void RegisterTagExpectation(
             string key,
             string expected,
-            Func<MockTracerAgent.Span, bool> when)
+            Func<MockTracerAgent.Span, bool> when = null)
         {
+            when = when ?? Always;
+
             Assertions.Add(span =>
             {
                 if (!when(span))

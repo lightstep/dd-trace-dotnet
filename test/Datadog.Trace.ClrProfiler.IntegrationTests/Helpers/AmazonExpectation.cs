@@ -7,7 +7,7 @@ namespace Datadog.Trace.ClrProfiler.IntegrationTests
         public AmazonExpectation(string serviceName)
         : base(serviceName, IntegrationOperationName, SpanTypes.Http)
         {
-            RegisterTagExpectation(Tags.SpanKind, expected: SpanKinds.Client, when: Always);
+            RegisterTagExpectation(Tags.SpanKind, expected: SpanKinds.Client);
         }
 
         public class Commands

@@ -9,8 +9,8 @@ namespace Datadog.Trace.ClrProfiler.IntegrationTests
             : base(serviceName, operationName, SpanTypes.GraphQL)
         {
             RegisterDelegateExpectation(ExpectErrorMatch);
-            RegisterTagExpectation(nameof(Tags.GraphQLSource), expected: GraphQLSource, Always);
-            RegisterTagExpectation(nameof(Tags.GraphQLOperationType), expected: GraphQLOperationType, Always);
+            RegisterTagExpectation(nameof(Tags.GraphQLSource), expected: GraphQLSource);
+            RegisterTagExpectation(nameof(Tags.GraphQLOperationType), expected: GraphQLOperationType);
         }
 
         public string GraphQLRequestBody { get; set; }
