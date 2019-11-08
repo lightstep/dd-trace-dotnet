@@ -208,9 +208,9 @@ namespace Datadog.Trace.ClrProfiler.Integrations
                 var awsQueueName = originalRequest?.GetProperty<string>("QueueName").GetValueOrDefault();
                 var awsQueueUrl = originalRequest?.GetProperty<string>("QueueUrl").GetValueOrDefault();
 
-                span.SetTag(AwsSdkTags.AgentName, AgentName);
-                span.SetTag(AwsSdkTags.SqsQueueName, awsQueueName);
-                span.SetTag(AwsSdkTags.SqsQueueUrl, awsQueueUrl);
+                span.SetTag(AmazonTags.AgentName, AgentName);
+                span.SetTag(AmazonTags.SqsQueueName, awsQueueName);
+                span.SetTag(AmazonTags.SqsQueueUrl, awsQueueUrl);
 
                 // set analytics sample rate if enabled
                 var analyticsSampleRate = tracer.Settings.GetIntegrationAnalyticsSampleRate(IntegrationName, enabledWithGlobalSetting: false);
@@ -243,14 +243,14 @@ namespace Datadog.Trace.ClrProfiler.Integrations
                     var awsService = request.GetProperty<string>("ServiceName").GetValueOrDefault();
 
                     awsOperation = AmazonSdkHelpers.TrimRequestFromEnd(awsOperation);
-                    span.SetTag(AwsSdkTags.OperationName, awsOperation);
-                    span.SetTag(AwsSdkTags.ServiceName, awsService);
+                    span.SetTag(AmazonTags.OperationName, awsOperation);
+                    span.SetTag(AmazonTags.ServiceName, awsService);
 
                     span.ResourceName = $"{AmazonSdkHelpers.TrimAmazonPrefix(awsService)}.{awsOperation}";
                 }
 
                 var requestId = executionContext.GetProperty("ResponseContext").GetProperty("Response").GetProperty("ResponseMetadata").GetProperty<string>("RequestId").GetValueOrDefault();
-                span.SetTag(AwsSdkTags.RequestId, requestId);
+                span.SetTag(AmazonTags.RequestId, requestId);
             }
         }
     }

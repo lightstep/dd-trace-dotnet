@@ -25,18 +25,19 @@ namespace Datadog.Trace.ClrProfiler.IntegrationTests
 
         private IEnumerable<string> ExpectErrorMatch(MockTracerAgent.Span span)
         {
-            if (string.IsNullOrEmpty(GetTag(span, Tags.ErrorMsg)))
+            var error = GetTag(span, Tags.ErrorMsg);
+            if (string.IsNullOrEmpty(error))
             {
                 if (IsGraphQLError)
                 {
-                    yield return "Expected an error message.";
+                    yield return $"Expected an error message but {Tags.ErrorMsg} tag is missing or empty.";
                 }
             }
             else
             {
                 if (!IsGraphQLError)
                 {
-                    yield return "Expected no error message.";
+                    yield return $"Expected no error message but {Tags.ErrorMsg} tag was {error}.";
                 }
             }
         }

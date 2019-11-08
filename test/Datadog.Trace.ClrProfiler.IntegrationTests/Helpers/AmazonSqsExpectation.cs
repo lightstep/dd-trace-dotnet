@@ -4,18 +4,18 @@ using Datadog.Trace.TestHelpers;
 
 namespace Datadog.Trace.ClrProfiler.IntegrationTests
 {
-    public class AmazonSqsExpectation : AwsSdkExpectation
+    public class AmazonSqsExpectation : AmazonExpectation
     {
         public AmazonSqsExpectation(string serviceName)
         : base(serviceName)
         {
-            TagShouldExist(AwsSdkTags.OperationName, Always);
-            TagShouldExist(AwsSdkTags.AgentName, Always);
-            TagShouldExist(AwsSdkTags.ServiceName, Always);
-            TagShouldExist(AwsSdkTags.RequestId, Always);
+            TagShouldExist(AmazonTags.OperationName, Always);
+            TagShouldExist(AmazonTags.AgentName, Always);
+            TagShouldExist(AmazonTags.ServiceName, Always);
+            TagShouldExist(AmazonTags.RequestId, Always);
 
             var creatingOrDeletingQueue = new HashSet<string> { Commands.CreateQueueRequest };
-            TagShouldExist(AwsSdkTags.SqsQueueName, when: span => creatingOrDeletingQueue.Contains(GetTag(span, AwsSdkTags.OperationName)));
+            TagShouldExist(AmazonTags.SqsQueueName, when: span => creatingOrDeletingQueue.Contains(GetTag(span, AmazonTags.OperationName)));
 
             var operationsAgainstQueue = new HashSet<string>
             {
@@ -25,7 +25,7 @@ namespace Datadog.Trace.ClrProfiler.IntegrationTests
                 Commands.DeleteMessageRequest,
                 Commands.DeleteMessageBatchRequest
             };
-            TagShouldExist(AwsSdkTags.SqsQueueUrl, when: span => operationsAgainstQueue.Contains(GetTag(span, AwsSdkTags.OperationName)));
+            TagShouldExist(AmazonTags.SqsQueueUrl, when: span => operationsAgainstQueue.Contains(GetTag(span, AmazonTags.OperationName)));
 
             IsTopLevel = false;
         }
@@ -35,7 +35,7 @@ namespace Datadog.Trace.ClrProfiler.IntegrationTests
         public override bool ShouldInspect(MockTracerAgent.Span span)
         {
             return
-                GetTag(span, AwsSdkTags.OperationName) == AwsOperation
+                GetTag(span, AmazonTags.OperationName) == AwsOperation
              && base.ShouldInspect(span);
         }
 

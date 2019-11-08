@@ -42,7 +42,7 @@ namespace Datadog.Trace.ClrProfiler.IntegrationTests.AWS
                 Assert.True(processResult.ExitCode >= 0, $"Process exited with code {processResult.ExitCode} and exception: {processResult.StandardError}");
 
                 var expectedSpans = 13;
-                var spans = agent.WaitForSpans(expectedSpans, 500, operationName: AwsSdkExpectation.IntegrationOperationName);
+                var spans = agent.WaitForSpans(expectedSpans, 500, operationName: AmazonExpectation.IntegrationOperationName);
                 Assert.True(spans.Count >= expectedSpans, $"Expecting at least {expectedSpans} spans, only received {spans.Count}");
 
                 SpanTestHelpers.AssertExpectationsMet(_expectations, spans.ToList());

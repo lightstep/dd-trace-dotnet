@@ -22,8 +22,7 @@ namespace Samples.Amazon.SQS
         {
             // Set up AmazonSQSConfig and redirect to the local message queue instance
             var awsCreds = new BasicAWSCredentials("x", "x");
-            var sqsConfig = new AmazonSQSConfig();
-            sqsConfig.ServiceURL = "http://" + Host();
+            var sqsConfig = new AmazonSQSConfig { ServiceURL = "http://" + Host() };
             sqsClient = new AmazonSQSClient(awsCreds, sqsConfig);
 
 #if NETFRAMEWORK
@@ -41,7 +40,6 @@ namespace Samples.Amazon.SQS
                 DeleteQueue();
             }
 #endif
-
             Console.WriteLine();
             Console.WriteLine("Beginning Async methods");
             using (var scope = Tracer.Instance.StartActive("async-methods"))

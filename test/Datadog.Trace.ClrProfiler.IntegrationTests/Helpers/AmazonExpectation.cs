@@ -1,13 +1,10 @@
-using System.Collections.Generic;
-using Datadog.Trace.TestHelpers;
-
 namespace Datadog.Trace.ClrProfiler.IntegrationTests
 {
-    public class AwsSdkExpectation : SpanExpectation
+    public class AmazonExpectation : SpanExpectation
     {
         public const string IntegrationOperationName = "aws.http";
 
-        public AwsSdkExpectation(string serviceName)
+        public AmazonExpectation(string serviceName)
         : base(serviceName, IntegrationOperationName, SpanTypes.Http)
         {
             RegisterTagExpectation(Tags.SpanKind, expected: SpanKinds.Client, when: Always);

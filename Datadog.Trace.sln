@@ -263,7 +263,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UpdateVendors", "tools\Upda
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SynchronizeInstaller", "tools\SynchronizeInstaller\SynchronizeInstaller.csproj", "{EBDDF6D7-59B8-4831-80C6-458C1ABBFC63}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Samples.Amazon.SQS", "samples\Samples.Amazon.SQS\Samples.Amazon.SQS.csproj", "{CF4242ED-E3F1-4AA6-B268-6F1D0A891E64}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Samples.Amazon.Sqs", "samples\Samples.Amazon.SQS\Samples.Amazon.Sqs.csproj", "{CF4242ED-E3F1-4AA6-B268-6F1D0A891E64}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

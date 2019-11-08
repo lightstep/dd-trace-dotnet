@@ -49,7 +49,7 @@ namespace Datadog.Trace.ClrProfiler.IntegrationTests
 
             Assert.True(!failures.Any(), finalMessage);
 
-            var uninspectedSpans = spans.Count(s => s.Inspected);
+            var uninspectedSpans = spans.Count(s => !s.Inspected);
             Assert.True(uninspectedSpans == 0, $"There were {uninspectedSpans} spans unaccounted for.");
         }
     }
