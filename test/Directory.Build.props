@@ -4,6 +4,9 @@
   <PropertyGroup>
     <TargetFrameworks Condition="'$(OS)' == 'Windows_NT'">net452;net461;netcoreapp2.1;netcoreapp3.0</TargetFrameworks>
     <TargetFrameworks Condition="'$(OS)' != 'Windows_NT'">netcoreapp2.1;netcoreapp3.0</TargetFrameworks>
+    
+    <DefineConstants Condition="'$(TargetFramework)' == 'netcoreapp2.1'">$(DefineConstants);NETCOREAPP2_1</DefineConstants>
+    <DefineConstants Condition="'$(TargetFramework)' == 'netcoreapp3.0'">$(DefineConstants);NETCOREAPP3</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>
