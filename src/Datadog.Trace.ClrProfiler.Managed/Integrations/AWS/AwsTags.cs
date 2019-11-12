@@ -2,6 +2,8 @@ namespace Datadog.Trace.ClrProfiler.Integrations
 {
     internal static class AwsTags
     {
+        public const string Region = "aws.region";
+
         public const string AgentName = "aws.agent";
 
         public const string ServiceName = "aws.service";

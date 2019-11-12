@@ -10,7 +10,7 @@ namespace Datadog.Trace.ClrProfiler.Integrations
     /// </summary>
     public static class AwsSqsIntegration
     {
-        private const string IntegrationName = "AWS";
+        private const string IntegrationName = "Amazon.SQS";
         private const string OperationName = "aws.http";
         private const string AgentName = "dotnet-aws-sdk";
 
