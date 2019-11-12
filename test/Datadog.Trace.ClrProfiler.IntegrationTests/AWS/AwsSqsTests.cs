@@ -72,7 +72,7 @@ namespace Datadog.Trace.ClrProfiler.IntegrationTests.AWS
             return new AwsSqsExpectation("Samples.Aws.Sqs-aws")
             {
                 AwsOperation = awsOperation,
-                ResourceName = $"SQS.{awsOperation}",
+                ResourceName = $"{awsOperation}",
             };
         }
     }
