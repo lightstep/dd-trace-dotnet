@@ -89,6 +89,64 @@
     ]
   },
   {
+    "name": "AspNetCoreMvc3",
+    "method_replacements": [
+      {
+        "caller": {
+          "assembly": "Microsoft.AspNetCore.Mvc"
+        },
+        "target": {
+          "assembly": "Microsoft.AspNetCore.Mvc",
+          "type": "Microsoft.AspNetCore.Mvc.MvcCoreDiagnosticListenerExtensions",
+          "method": "BeforeOnResourceExecuted",
+          "signature_types": [
+            "System.Void",
+            "_",
+            "_"
+          ],
+          "minimum_major": 1,
+          "minimum_minor": 0,
+          "minimum_patch": 0,
+          "maximum_major": 6,
+          "maximum_minor": 65535,
+          "maximum_patch": 65535
+        },
+        "wrapper": {
+          "assembly": "Datadog.Trace.ClrProfiler.Managed, Version=1.9.0.0, Culture=neutral, PublicKeyToken=def86d061d0d2eeb",
+          "type": "Datadog.Trace.ClrProfiler.Integrations.AspNetCoreMvc3Integration",
+          "method": "BeforeOnResourceExecuted",
+          "signature": "00 06 01 1C 1C 1C 08 08 0A"
+        }
+      },
+      {
+        "caller": {
+          "assembly": "Microsoft.AspNetCore.Mvc"
+        },
+        "target": {
+          "assembly": "Microsoft.AspNetCore.Mvc",
+          "type": "TBD",
+          "method": "AfterOnResourceExecuted",
+          "signature_types": [
+            "System.Void",
+            "_"
+          ],
+          "minimum_major": 1,
+          "minimum_minor": 0,
+          "minimum_patch": 0,
+          "maximum_major": 6,
+          "maximum_minor": 65535,
+          "maximum_patch": 65535
+        },
+        "wrapper": {
+          "assembly": "Datadog.Trace.ClrProfiler.Managed, Version=1.9.0.0, Culture=neutral, PublicKeyToken=def86d061d0d2eeb",
+          "type": "Datadog.Trace.ClrProfiler.Integrations.AspNetCoreMvc3Integration",
+          "method": "AfterOnResourceExecuted",
+          "signature": "00 05 01 1C 1C 08 08 0A"
+        }
+      }
+    ]
+  },
+  {
     "name": "AspNetMvc",
     "method_replacements": [
       {

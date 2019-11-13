@@ -8,6 +8,12 @@
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
 
+  <!--Implicitly referenced through "Microsoft.NET.Sdk.Web"-->
+  <!--<ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>-->
+
+  <!--Begin linked files section (Shared code with AspNetCoreMvc2 -->
   <ItemGroup>
     <Compile Include="..\Samples.AspNetCoreMvc2\Attributes\StackTraceHelper.cs" Link="Attributes\StackTraceHelper.cs" />
     <Compile Include="..\Samples.AspNetCoreMvc2\Controllers\ApiController.cs" Link="Controllers\ApiController.cs" />
@@ -22,20 +28,20 @@
     <Folder Include="Extensions\" />
     <Folder Include="Models\" />
     <Folder Include="Controllers\" />
-    <Folder Include="Views\Home\" />
     <Folder Include="wwwroot\" />
   </ItemGroup>
-
-  <ItemGroup>
-    <None Include="..\Samples.AspNetCoreMvc2\Views\Home\Delay.cshtml" Link="Views\Home\Delay.cshtml" />
-    <None Include="..\Samples.AspNetCoreMvc2\Views\Home\Index.cshtml" Link="Views\Home\Index.cshtml" />
-    <None Include="..\Samples.AspNetCoreMvc2\Views\_Layout.cshtml" Link="Views\_Layout.cshtml" />
-    <None Include="..\Samples.AspNetCoreMvc2\Views\_ViewImports.cshtml" Link="Views\_ViewImports.cshtml" />
-    <None Include="..\Samples.AspNetCoreMvc2\Views\_ViewStart.cshtml" Link="Views\_ViewStart.cshtml" />
-  </ItemGroup>
+  <!--End linked files section-->
 
   <ItemGroup>
     <ProjectReference Include="..\..\sample-libs\Samples.Shared\Samples.Shared.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>
