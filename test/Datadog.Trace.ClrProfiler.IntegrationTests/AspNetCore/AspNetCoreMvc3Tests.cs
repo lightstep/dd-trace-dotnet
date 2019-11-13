@@ -8,6 +8,7 @@ namespace Datadog.Trace.ClrProfiler.IntegrationTests.AspNetCore
         public AspNetCoreMvc3Tests(ITestOutputHelper output)
             : base("AspNetCoreMvc.Netcore3", output)
         {
+            EnableDebugMode();
         }
 
 #if NETCOREAPP3
@@ -17,7 +18,7 @@ namespace Datadog.Trace.ClrProfiler.IntegrationTests.AspNetCore
         public void MeetsAllAspNetCoreMvcExpectations()
         {
             // No package versions are relevant because this is built-in
-            RunTraceTestOnSelfHosted(null);
+            RunTraceTestOnSelfHosted(string.Empty);
         }
 #endif
     }

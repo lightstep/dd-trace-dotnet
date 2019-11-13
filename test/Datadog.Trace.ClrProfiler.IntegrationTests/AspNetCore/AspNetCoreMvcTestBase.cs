@@ -13,12 +13,13 @@ namespace Datadog.Trace.ClrProfiler.IntegrationTests.AspNetCore
     {
         protected static readonly string TopLevelOperationName = "aspnet-coremvc.request";
 
-        protected readonly List<AspNetCoreMvcSpanExpectation> _expectations = new List<AspNetCoreMvcSpanExpectation>()
+        protected AspNetCoreMvcTestBase(string sampleAppName, ITestOutputHelper output)
+            : base(sampleAppName, output)
         {
-            CreateTopLevelExpectation(url: "/", httpMethod: "GET", httpStatus: "200", resourceUrl: "/"),
-            CreateTopLevelExpectation(url: "/delay/0", httpMethod: "GET", httpStatus: "200", resourceUrl: "delay/{seconds}"),
-            CreateTopLevelExpectation(url: "/api/delay/0", httpMethod: "GET", httpStatus: "200", resourceUrl: "api/delay/{seconds}"),
-            CreateTopLevelExpectation(url: "/status-code/203", httpMethod: "GET", httpStatus: "203", resourceUrl: "status-code/{statusCode}"),
+            CreateTopLevelExpectation(url: "/", httpMethod: "GET", httpStatus: "200", resourceUrl: "/");
+            CreateTopLevelExpectation(url: "/delay/0", httpMethod: "GET", httpStatus: "200", resourceUrl: "delay/{seconds}");
+            CreateTopLevelExpectation(url: "/api/delay/0", httpMethod: "GET", httpStatus: "200", resourceUrl: "api/delay/{seconds}");
+            CreateTopLevelExpectation(url: "/status-code/203", httpMethod: "GET", httpStatus: "203", resourceUrl: "status-code/{statusCode}");
             // TODO: The below test succeeds in IISExpress, but fails in self host when expecting a status code of 500.
             CreateTopLevelExpectation(
                 url: "/bad-request",
@@ -34,18 +35,15 @@ namespace Datadog.Trace.ClrProfiler.IntegrationTests.AspNetCore
                     }
 
                     return failures;
-                }),
-        };
-
-        protected AspNetCoreMvcTestBase(string sampleAppName, ITestOutputHelper output)
-            : base(sampleAppName, output)
-        {
+                });
         }
+
+        protected List<AspNetCoreMvcSpanExpectation> Expectations { get; set; } = new List<AspNetCoreMvcSpanExpectation>();
 
         public void RunTraceTestOnSelfHosted(string packageVersion)
         {
-            int agentPort = TcpPortProvider.GetOpenPort();
-            int aspNetCorePort = TcpPortProvider.GetOpenPort();
+            var agentPort = TcpPortProvider.GetOpenPort();
+            var aspNetCorePort = TcpPortProvider.GetOpenPort();
 
             using (var agent = new MockTracerAgent(agentPort))
             using (var process = StartSample(agent.Port, arguments: null, packageVersion: packageVersion, aspNetCorePort: aspNetCorePort))
@@ -78,9 +76,9 @@ namespace Datadog.Trace.ClrProfiler.IntegrationTests.AspNetCore
                 // wait for server to start
                 wh.WaitOne(5000);
 
-                var paths = _expectations.Select(e => e.OriginalUri).ToArray();
+                var paths = Expectations.Select(e => e.OriginalUri).ToArray();
                 SubmitRequests(aspNetCorePort, paths);
-                var spans = agent.WaitForSpans(_expectations.Count, operationName: TopLevelOperationName, returnAllOperations: true)
+                var spans = agent.WaitForSpans(Expectations.Count, operationName: TopLevelOperationName, returnAllOperations: true)
                                  .OrderBy(s => s.Start)
                                  .ToList();
 
@@ -89,18 +87,18 @@ namespace Datadog.Trace.ClrProfiler.IntegrationTests.AspNetCore
                     process.Kill();
                 }
 
-                SpanTestHelpers.AssertExpectationsMet(_expectations, spans);
+                SpanTestHelpers.AssertExpectationsMet(Expectations, spans);
             }
         }
 
-        protected static AspNetCoreMvcSpanExpectation CreateTopLevelExpectation(
+        protected void CreateTopLevelExpectation(
             string url,
             string httpMethod,
             string httpStatus,
             string resourceUrl,
             Func<MockTracerAgent.Span, List<string>> additionalCheck = null)
         {
-            var expectation = new AspNetCoreMvcSpanExpectation(, TopLevelOperationName)
+            var expectation = new AspNetCoreMvcSpanExpectation(EnvironmentHelper.FullSampleName, TopLevelOperationName)
             {
                 OriginalUri = url,
                 HttpMethod = httpMethod,
@@ -110,7 +108,7 @@ namespace Datadog.Trace.ClrProfiler.IntegrationTests.AspNetCore
 
             expectation.RegisterDelegateExpectation(additionalCheck);
 
-            return expectation;
+            Expectations.Add(expectation);
         }
 
         protected void SubmitRequests(int aspNetCorePort, string[] paths)
