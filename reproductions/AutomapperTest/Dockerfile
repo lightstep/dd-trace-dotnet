@@ -1,5 +1,5 @@
 FROM mcr.microsoft.com/dotnet/core/runtime:2.1-stretch-slim AS base
-ARG TRACER_VERSION=1.9.0
+ARG TRACER_VERSION=1.9.1
 RUN mkdir -p /opt/datadog
 RUN mkdir -p /var/log/datadog
 RUN curl -L https://github.com/lightstep/ls-trace-dotnet/releases/download/v$TRACER_VERSION/lightstep-dotnet-apm-$TRACER_VERSION.tar.gz | tar xzf - -C /opt/datadog
