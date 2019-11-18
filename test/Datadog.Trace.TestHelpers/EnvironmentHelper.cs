@@ -75,6 +75,8 @@ namespace Datadog.Trace.TestHelpers
 
         public string SampleName { get; }
 
+        public string FullSampleName => $"{_appNamePrepend}{SampleName}";
+
         public static EnvironmentHelper NonProfiledHelper(Type anchor, string appName, string directory)
         {
             return new EnvironmentHelper(
@@ -332,7 +334,7 @@ namespace Datadog.Trace.TestHelpers
                 extension = "dll";
             }
 
-            var appFileName = $"{_appNamePrepend}{SampleName}.{extension}";
+            var appFileName = $"{FullSampleName}.{extension}";
             var sampleAppPath = Path.Combine(GetSampleApplicationOutputDirectory(packageVersion), appFileName);
             return sampleAppPath;
         }
@@ -351,7 +353,7 @@ namespace Datadog.Trace.TestHelpers
             }
             else
             {
-                var appFileName = $"{_appNamePrepend}{SampleName}.exe";
+                var appFileName = $"{FullSampleName}.exe";
                 executor = Path.Combine(GetSampleApplicationOutputDirectory(), appFileName);
 
                 if (!File.Exists(executor))
@@ -369,7 +371,7 @@ namespace Datadog.Trace.TestHelpers
             var projectDir = Path.Combine(
                 solutionDirectory,
                 _samplesDirectory,
-                $"{_appNamePrepend}{SampleName}");
+                $"{FullSampleName}");
             return projectDir;
         }
 
