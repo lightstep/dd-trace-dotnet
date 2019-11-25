@@ -8,4 +8,5 @@ jobs:
     executor: win/vs2019
     steps:
       - checkout
+      - run: dotnet restore Datadog.Trace.sln
       - run: dotnet build Datadog.Trace.sln
