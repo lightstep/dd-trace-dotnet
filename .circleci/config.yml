@@ -10,4 +10,4 @@ jobs:
       - checkout
       - run: dotnet restore src/Datadog.Trace/Datadog.Trace.csproj
       - run: dotnet build src/Datadog.Trace/Datadog.Trace.csproj
-      - run: dotnet test test/Datadog.Trace.Tests.csproj
+      - run: dotnet test test/Datadog.Trace.Tests/Datadog.Trace.Tests.csproj
