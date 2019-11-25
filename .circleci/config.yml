@@ -8,8 +8,6 @@ jobs:
     executor: windows/default
     steps:
       - checkout
-      - run: dotnet restore Datadog.Trace.sln
-      - run: dotnet build Datadog.Trace.sln
-
+      - run: dotnet restore src/Datadog.Trace/Datadog.Trace.csproj
+      - run: dotnet build src/Datadog.Trace/Datadog.Trace.csproj
       - run: dotnet test test/Datadog.Trace.Tests.csproj
-      - run: dotnet test test/Datadog.Trace.ClrProfiler.Managed.Tests.csproj
