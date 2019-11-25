@@ -10,3 +10,6 @@ jobs:
       - checkout
       - run: dotnet restore Datadog.Trace.sln
       - run: dotnet build Datadog.Trace.sln
+
+      - run: dotnet test test/Datadog.Trace.Tests.csproj
+      - run: dotnet test test/Datadog.Trace.ClrProfiler.Managed.Tests.csproj
