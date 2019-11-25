@@ -5,16 +5,11 @@ orbs:
 
 jobs:
   build:
-    executor: win/vs2019
+    executor: windows/default
     steps:
       - checkout
-      - restore_cache:
-          keys:
       - run: dotnet restore Datadog.Trace.sln
       - run: dotnet build Datadog.Trace.sln
-      save_cache:
-        paths:
-          - C:\Users\circleci\.nuget\packages
 
       - run: dotnet test test/Datadog.Trace.Tests.csproj
       - run: dotnet test test/Datadog.Trace.ClrProfiler.Managed.Tests.csproj
