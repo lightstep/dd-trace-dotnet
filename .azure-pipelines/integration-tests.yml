@@ -11,7 +11,7 @@ trigger:
 
 variables:
   buildConfiguration: Debug
-  packageFeed: /ffc32c57-3e0e-4e8f-8633-a7ad01df2e45
+  # packageFeed: /ffc32c57-3e0e-4e8f-8633-a7ad01df2e45
   dotnetCoreSdkVersion: 3.0.x
   dotnetCore21SdkVersion: 2.1.x
   publishOutput: $(Build.SourcesDirectory)/src/bin/managed-publish
@@ -115,7 +115,7 @@ jobs:
     displayName: nuget restore native
     inputs:
       restoreSolution: Datadog.Trace.Native.sln
-      vstsFeed: $(packageFeed)
+      # vstsFeed: $(packageFeed)
       verbosityRestore: Normal
 
   - task: MSBuild@1
@@ -132,7 +132,7 @@ jobs:
     inputs:
       restoreSolution: reproductions/**/packages.config
       restoreDirectory: $(Build.SourcesDirectory)/packages
-      vstsFeed: $(packageFeed)
+      # vstsFeed: $(packageFeed)
       verbosityRestore: Normal
 
   - task: MSBuild@1
@@ -162,7 +162,7 @@ jobs:
         test/Datadog.Trace.ClrProfiler.IntegrationTests/Datadog.Trace.ClrProfiler.IntegrationTests.csproj
         !reproductions/**/ExpenseItDemo*.csproj
         !reproductions/**/EntityFramework6x*.csproj
-      vstsFeed: $(packageFeed)
+      # vstsFeed: $(packageFeed)
 
   - task: DotNetCoreCLI@2
     displayName: dotnet build integration tests
