@@ -10,7 +10,6 @@ trigger:
 
 variables:
   buildConfiguration: Debug
-  # packageFeed: /ffc32c57-3e0e-4e8f-8633-a7ad01df2e45
   dotnetCoreSdkVersion: 3.0.x
   dotnetCore21SdkVersion: 2.1.x
 
@@ -47,7 +46,6 @@ jobs:
       projects: |
         src/**/*.csproj
         test/**/*.Tests.csproj
-      # vstsFeed: $(packageFeed)
 
   - task: DotNetCoreCLI@2
     displayName: dotnet build
@@ -96,7 +94,6 @@ jobs:
     displayName: nuget restore
     inputs:
       restoreSolution: Datadog.Trace.Native.sln
-      # vstsFeed: $(packageFeed)
       verbosityRestore: Normal
 
   - task: MSBuild@1
