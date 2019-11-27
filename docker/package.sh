@@ -24,10 +24,10 @@ for pkgtype in $PKGTYPES ; do
         createLogPath.sh
 done
 
-gzip -f datadog-dotnet-apm.tar
+gzip -f lightstep-dotnet-apm.tar
 
 if [ -z "${MUSL-}" ]; then
   mv lightstep-dotnet-apm.tar.gz lightstep-dotnet-apm-$VERSION.tar.gz
 else
-  mv lightstep-dotnet-apm.tar.gz lightstep-dotnet-apm-$VERSION-musl.tar.gz
+  mv lightstep-dotnet-apm.tar.gz lightstep-dotnet-apm-$VERSION-misl.tar.gz
 fi
