@@ -13,7 +13,7 @@
     <PackageProjectUrl>https://docs.lightstep.com/docs/net-auto-instrumentation</PackageProjectUrl>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <PackageReleaseNotes>See release notes at https://github.com/LightStep/ls-trace-dotnet/releases</PackageReleaseNotes>
+    <PackageReleaseNotes>See release notes at https://github.com/lightstep/ls-trace-dotnet/releases</PackageReleaseNotes>
     <PackageTags>lightstep;APM;tracing;profiling;instrumentation</PackageTags>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/LightStep/ls-trace-dotnet.git</RepositoryUrl>
