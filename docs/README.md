@@ -6,7 +6,7 @@ Datadog has generously announced the [donation](https://www.datadoghq.com/blog/o
 
 ## Installation and Usage
 
-Please read to our [documentation](https://docs.lightstep.com/docs/net-auto-instrumentation) for instructions on setting up .NET tracing and details about supported frameworks.
+Please [read our documentation](https://docs.lightstep.com/docs/net-auto-instrumentation) for instructions on setting up .NET tracing and details about supported frameworks.
 
 ## Downloads
 
