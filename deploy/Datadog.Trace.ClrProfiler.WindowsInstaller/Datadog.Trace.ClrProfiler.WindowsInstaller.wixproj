@@ -14,7 +14,7 @@
     <IntermediateOutputPath>obj\$(Configuration)\$(Platform)\</IntermediateOutputPath>
     <SuppressPdbOutput>True</SuppressPdbOutput>
     <DefineSolutionProperties>false</DefineSolutionProperties>
-    <OutputName>datadog-dotnet-apm-1.15.0-$(Platform)</OutputName>
+    <OutputName>lightstep-dotnet-apm-1.15.0-$(Platform)</OutputName>
   </PropertyGroup>
 
   <PropertyGroup>
