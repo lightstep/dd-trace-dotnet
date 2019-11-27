@@ -16,7 +16,7 @@
     <PackageReleaseNotes>See release notes at https://github.com/lightstep/ls-trace-dotnet/releases</PackageReleaseNotes>
     <PackageTags>lightstep;APM;tracing;profiling;instrumentation</PackageTags>
     <RepositoryType>git</RepositoryType>
-    <RepositoryUrl>https://github.com/LightStep/ls-trace-dotnet.git</RepositoryUrl>
+    <RepositoryUrl>https://github.com/lightstep/ls-trace-dotnet.git</RepositoryUrl>
     <Copyright>Datadog, Inc. 2017-2019</Copyright>
   </PropertyGroup>
 
