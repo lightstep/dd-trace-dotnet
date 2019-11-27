@@ -10,7 +10,7 @@
     <!-- NuGet packages -->
     <IsPackable>true</IsPackable>
     <PackageIconUrl>https://github.com/LightStep/lightstep-tracer-csharp/raw/master/ls128x128.png</PackageIconUrl>
-    <PackageProjectUrl>hhttps://docs.lightstep.com/docs/net-auto-instrumentation</PackageProjectUrl>
+    <PackageProjectUrl>https://docs.lightstep.com/docs/net-auto-instrumentation</PackageProjectUrl>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageReleaseNotes>See release notes at https://github.com/LightStep/ls-trace-dotnet/releases</PackageReleaseNotes>
