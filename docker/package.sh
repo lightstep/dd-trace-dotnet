@@ -29,5 +29,5 @@ gzip -f lightstep-dotnet-apm.tar
 if [ -z "${MUSL-}" ]; then
   mv lightstep-dotnet-apm.tar.gz lightstep-dotnet-apm-$VERSION.tar.gz
 else
-  mv lightstep-dotnet-apm.tar.gz lightstep-dotnet-apm-$VERSION-musl.tar.gz
+  mv lightstep-dotnet-apm.tar.gz lightstep-dotnet-apm-$VERSION-misl.tar.gz
 fi
