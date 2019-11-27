@@ -20,7 +20,7 @@
          This is the default value if one is not specified when building. -->
     <InstallerVersion Condition="'$(InstallerVersion)'==''">0.1</InstallerVersion>
     <!-- default msi filename if not specified -->
-    <OutputName Condition="'$(OutputName)'==''">datadog-dotnet-apm-$(InstallerVersion)-$(Platform)-$(Configuration)</OutputName>
+    <OutputName Condition="'$(OutputName)'==''">lightstep-dotnet-apm-$(InstallerVersion)-$(Platform)-$(Configuration)</OutputName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <DefineConstants>Debug;InstallerVersion=$(InstallerVersion)</DefineConstants>

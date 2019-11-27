@@ -13,7 +13,7 @@ for pkgtype in deb rpm tar ; do
         -f \
         -s dir \
         -t $pkgtype \
-        -n datadog-dotnet-apm \
+        -n lightstep-dotnet-apm \
         -v $VERSION \
         $(if [ $pkgtype != 'tar' ] ; then echo --prefix /opt/datadog ; fi) \
         --chdir $DIR/../src/Datadog.Trace.ClrProfiler.Native/bin/Debug/x64 \
@@ -22,5 +22,5 @@ for pkgtype in deb rpm tar ; do
         integrations.json
 done
 
-gzip -f datadog-dotnet-apm.tar
-mv datadog-dotnet-apm.tar.gz datadog-dotnet-apm-$VERSION.tar.gz
+gzip -f lightstep-dotnet-apm.tar
+mv lightstep-dotnet-apm.tar.gz lightstep-dotnet-apm-$VERSION.tar.gz
