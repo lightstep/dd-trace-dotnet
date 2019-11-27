@@ -6,7 +6,7 @@
     <!-- NuGet -->
     <id>LightStep.Trace.ClrProfiler.Managed</id>
     <Version>1.15.0</Version>
-    <Title>Datadog APM - ClrProfiler</Title>
+    <Title>LightStep Datadog APM - ClrProfiler fork</Title>
     <Description>
 DEPRECATED. This package exists only for backwards compatibility. If your project references this package ("Datadog.Trace.ClrProfiler.Managed") or "Datadog.Trace.AspNet", you can remove them both.
 
