@@ -4,6 +4,7 @@
     <RootNamespace>Datadog.Trace.ClrProfiler</RootNamespace>
 
     <!-- NuGet -->
+    <id>LightStep.Trace.ClrProfiler.Managed</id>
     <Version>1.9.0</Version>
     <Title>Datadog APM - ClrProfiler</Title>
     <Description>Automatic instrumentation library used by .NET Tracer for Datadog APM. Requires separate native library that implements the CLR Profiling API.</Description>
