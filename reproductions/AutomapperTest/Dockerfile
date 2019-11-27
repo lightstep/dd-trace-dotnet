@@ -2,7 +2,7 @@ FROM mcr.microsoft.com/dotnet/core/runtime:2.1-stretch-slim AS base
 ARG TRACER_VERSION=1.15.0
 RUN mkdir -p /opt/datadog
 RUN mkdir -p /var/log/datadog/dotnet
-RUN curl -L https://github.com/LightStep/ls-trace-dotnet/releases/download/v$TRACER_VERSION/lightstep-dotnet-apm-$TRACER_VERSION.tar.gz | tar xzf - -C /opt/datadog
+RUN curl -L https://github.com/lightstep/ls-trace-dotnet/releases/download/v$TRACER_VERSION/lightstep-dotnet-apm-$TRACER_VERSION.tar.gz | tar xzf - -C /opt/datadog
 
 ENV CORECLR_ENABLE_PROFILING=1
 ENV CORECLR_PROFILER={846F5F1C-F9AE-4B07-969E-05C26BC060D8}
