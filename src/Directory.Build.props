@@ -19,8 +19,11 @@
     <Copyright>Datadog, Inc. 2017-2019</Copyright>
   </PropertyGroup>
 
-  <!-- StyleCop -->
   <ItemGroup>
+    <!-- NuGet -->
+    <None Include="$(MSBuildThisFileDirectory)\..\datadog-logo-256x256.png" Pack="true" Visible="false" PackagePath="packageIcon.png" />
+
+    <!-- StyleCop -->
     <Compile Include="..\GlobalSuppressions.cs" Link="GlobalSuppressions.src.cs" />
   </ItemGroup>
 </Project>
