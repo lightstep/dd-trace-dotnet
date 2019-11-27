@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <!-- NuGet -->
-    <PackageId>LightStep.Trace</PackageId>
+    <id>LightStep.Trace</id>
     <Version>1.14.3-prerelease</Version>
     <Title>LightStep's Datadog APM fork</Title>
     <Description>Manual instrumentation library for Datadog APM</Description>
