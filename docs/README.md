@@ -6,7 +6,7 @@ Datadog has generously announced the [donation](https://www.datadoghq.com/blog/o
 
 ## Installation and Usage
 
-Please read our [documentation](https://docs.lightstep.com/docs/dotnet-auto-instrumentation) for instructions on setting up .NET tracing and details about supported frameworks.
+Please read to our [documentation](https://docs.lightstep.com/docs/net-auto-instrumentation) for instructions on setting up .NET tracing and details about supported frameworks.
 
 ## Downloads
 
@@ -18,11 +18,11 @@ Windows and Linux Installers|[See releases](https://github.com/LightStep/ls-trac
 
 ## Versioning
 
-ls-trace-dotnet follows its own versioning scheme. The table below shows the corresponding dd-trace-dotnet versions.
+ls-trace-dotnet follows dd-trace-dotnet versions, providing pinned versions of each release:
 
 | ls-trace-dotnet version | dd-trace-dotnet version |
 |-------------------------|-------------------------|
-| v0.1.0                  | v1.19.0                 |
+| v1.19.0                 | v1.19.0                 |
 
 ## Get in touch
 
