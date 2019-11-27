@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <!-- NuGet -->
-    <PackageId>LightStep.Trace.OpenTracing</PackageId>
+    <id>LightStep.Trace.OpenTracing</id>
     <Version>1.14.3-prerelease</Version>
     <Title>LightStep's Datadog APM fork - OpenTracing</Title>
     <Description>Provides OpenTracing support for Datadog APM</Description>

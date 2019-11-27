@@ -7,8 +7,8 @@
     <OutputPath>..\bin\ProfilerResources\</OutputPath>
 
     <!-- NuGet -->
-    <id>LightStep.Trace.ClrProfiler.Managed.Loader</id>
-    <Version>1.15.0</Version>
+    <Id>LightStep.Trace.ClrProfiler.Managed.Loader</PackageId>
+    <Version>1.14.3-prerelease</Version>
   </PropertyGroup>
 
 </Project>
