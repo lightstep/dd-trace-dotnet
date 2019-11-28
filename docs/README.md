@@ -1,7 +1,5 @@
 # ls-trace-dotnet
 
-[![CircleCI](https://circleci.com/gh/lightstep/ls-trace-dotnet/tree/master.svg?style=svg)](https://circleci.com/gh/lightstep/ls-trace-dotnet/tree/master)
-
 Datadog has generously announced the [donation](https://www.datadoghq.com/blog/opentelemetry-instrumentation) of their tracer libraries to the [OpenTelemety](https://opentelemetry.io/), project. Auto-instrumentation is a core feature of these libraries, making it possible to create and collect telemetry data without needing to change your code. LightStep wants you to be able to use these libraries now! `ls-trace-dontnet` is LightStep's fork of Datadog’s tracing client for .NET. You can install and use it to take advantage of auto-instrumentation without waiting for OpenTelemetry. Each LightStep agent is [“pinned” to a Datadog release](#versioning) and is fully supported by LightStep’s Customer Success team.
 
 ## Installation and Usage
