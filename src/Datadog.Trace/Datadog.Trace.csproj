@@ -6,7 +6,6 @@
     <Version>1.10.1-prerelease</Version>
     <Title>LightStep's Datadog APM fork</Title>
     <Description>Manual instrumentation library for Datadog APM</Description>
-    <Authors>lucas.pimentel.datadog;colinhigginsdatadog;zachmontoyadd</Authors>
   </PropertyGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' != 'netstandard2.0' ">
