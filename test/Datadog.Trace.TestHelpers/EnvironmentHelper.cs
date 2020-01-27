@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.IO;
 using System.Reflection;
@@ -24,7 +25,6 @@ namespace Datadog.Trace.TestHelpers
         private readonly string _runtime;
         private readonly bool _isCoreClr;
         private readonly string _samplesDirectory;
-        private readonly string _disabledIntegrations;
         private readonly Type _anchorType;
         private readonly Assembly _anchorAssembly;
         private readonly TargetFrameworkAttribute _targetFramework;
@@ -38,13 +38,11 @@ namespace Datadog.Trace.TestHelpers
             Type anchorType,
             ITestOutputHelper output,
             string samplesDirectory = "samples",
-            string disabledIntegrations = null,
             bool prependSamplesToAppName = true,
             bool requiresProfiling = true)
         {
             SampleName = sampleName;
             _samplesDirectory = samplesDirectory ?? "samples";
-            _disabledIntegrations = disabledIntegrations;
             _anchorType = anchorType;
             _anchorAssembly = Assembly.GetAssembly(_anchorType);
             _targetFramework = _anchorAssembly.GetCustomAttribute<TargetFrameworkAttribute>();
@@ -68,6 +66,10 @@ namespace Datadog.Trace.TestHelpers
                           ? "Samples."
                           : string.Empty;
         }
+
+        public bool DebugModeEnabled { get; set; }
+
+        public Dictionary<string, string> CustomEnvironmentVariables { get; set; } = new Dictionary<string, string>();
 
         public string SampleName { get; }
 
@@ -137,7 +139,7 @@ namespace Datadog.Trace.TestHelpers
             }
         }
 
-        public void SetEnvironmentVariableDefaults(
+        public void SetEnvironmentVariables(
             int agentPort,
             int aspNetCorePort,
             string processPath,
@@ -168,6 +170,11 @@ namespace Datadog.Trace.TestHelpers
                 processName = Path.GetFileName(processPath);
             }
 
+            if (DebugModeEnabled)
+            {
+                environmentVariables["DD_TRACE_DEBUG"] = "1";
+            }
+
             environmentVariables["DD_PROFILER_PROCESSES"] = processName;
 
             string integrations = string.Join(";", GetIntegrationsFilePaths());
@@ -187,9 +194,9 @@ namespace Datadog.Trace.TestHelpers
                 }
             }
 
-            if (_disabledIntegrations != null)
+            foreach (var key in CustomEnvironmentVariables.Keys)
             {
-                environmentVariables["DD_DISABLED_INTEGRATIONS"] = _disabledIntegrations;
+                environmentVariables[key] = CustomEnvironmentVariables[key];
             }
         }
 
