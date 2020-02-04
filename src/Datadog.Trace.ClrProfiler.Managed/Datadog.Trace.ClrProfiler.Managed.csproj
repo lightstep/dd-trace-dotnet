@@ -7,11 +7,12 @@
     <PackageId>LightStep.Trace.ClrProfiler.Managed</PackageId>
     <Version>1.11.1-prerelease</Version>
     <Title>LightStep's Datadog APM fork - ClrProfiler</Title>
-    <Description>OBSOLETE. This package is deprecated and exists only for backwards compatibility.
-Users who need automatic instrumentation on .NET Core do not need a NuGet package anymore.
-Users who need automatic instrumentation on legacy ASP.NET should reference the "LightStep.Trace.AspNet" package.
-Users who need manual instrumentation should reference the "LightStep.Trace" package.
-   </Description>
+    <Description>
+      OBSOLETE. This package is deprecated and exists only for backwards compatibility.
+      Users who need manual instrumentation should reference the "LightStep.Trace" package.
+      ASP.NET is now automatically instrumented. If your project references this package
+      (LightStep.Trace.ClrProfiler.Managed) or LightStep.Trace.AspNet, you can remove them.
+    </Description>
 
     <!-- Remove the Datadog.Trace.ClrProfiler.Managed.dll assembly from the output and hide inapplicable warning (https://docs.microsoft.com/en-us/nuget/reference/errors-and-warnings/nu5128) -->
     <IncludeBuildOutput>false</IncludeBuildOutput>
