@@ -11,6 +11,7 @@ using Datadog.Trace.DogStatsd;
 using Datadog.Trace.Logging;
 using Datadog.Trace.PlatformHelpers;
 using Datadog.Trace.Sampling;
+using Datadog.Trace.Vendors.Serilog.Events;
 using Datadog.Trace.Vendors.StatsdClient;
 
 namespace Datadog.Trace
@@ -401,6 +402,49 @@ namespace Datadog.Trace
                 Log.Debug("DiagnosticManager not started, zero observers added.");
             }
             else
+            {
+                Log.Debug("Starting DiagnosticManager with {0} observers.", observers.Count);
+
+                var diagnosticManager = new DiagnosticManager(observers);
+                diagnosticManager.Start();
+                DiagnosticManager = diagnosticManager;
+            }
+        }
+
+        internal void StartDiagnosticObservers()
+        {
+            // instead of adding a hard dependency on DiagnosticSource,
+            // check if it is available before trying to use it
+            var type = Type.GetType("System.Diagnostics.DiagnosticSource, System.Diagnostics.DiagnosticSource", throwOnError: false);
+
+            if (type == null)
+            {
+                Log.Warning("DiagnosticSource type could not be loaded. Disabling diagnostic observers.");
+            }
+            else
+            {
+                // don't call this method unless the necessary types are available
+                StartDiagnosticObserversInternal();
+            }
+        }
+
+        internal void StartDiagnosticObserversInternal()
+        {
+            DiagnosticManager?.Stop();
+
+            var observers = new List<DiagnosticObserver>();
+
+#if !NET45
+            if (Settings.IsIntegrationEnabled(AspNetCoreDiagnosticObserver.IntegrationName))
+            {
+                Log.Debug("Adding AspNetCoreDiagnosticObserver");
+
+                var aspNetCoreDiagnosticOptions = new AspNetCoreDiagnosticOptions();
+                observers.Add(new AspNetCoreDiagnosticObserver(this, aspNetCoreDiagnosticOptions));
+            }
+#endif
+
+            if (observers.Count > 0)
             {
                 Log.Debug("Starting DiagnosticManager with {0} observers.", observers.Count);
 

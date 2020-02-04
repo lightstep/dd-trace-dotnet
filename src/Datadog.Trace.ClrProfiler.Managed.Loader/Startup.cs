@@ -25,8 +25,15 @@ namespace Datadog.Trace.ClrProfiler.Managed.Loader
         {
             try
             {
-                Assembly.Load(new AssemblyName("Datadog.Trace.ClrProfiler.Managed, Version=1.11.1.0, Culture=neutral, PublicKeyToken=def86d061d0d2eeb"));
-                return true;
+                var assembly = Assembly.Load("Datadog.Trace.ClrProfiler.Managed, Version=1.11.1.0, Culture=neutral, PublicKeyToken=def86d061d0d2eeb");
+
+                if (assembly != null)
+                {
+                    // call method Datadog.Trace.ClrProfiler.Instrumentation.Initialize()
+                    var type = assembly.GetType("Datadog.Trace.ClrProfiler.Instrumentation", throwOnError: false);
+                    var method = type?.GetRuntimeMethod("Initialize", parameters: new Type[0]);
+                    method?.Invoke(obj: null, parameters: null);
+                }
             }
             catch
             {
