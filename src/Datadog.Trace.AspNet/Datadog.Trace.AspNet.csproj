@@ -20,7 +20,6 @@ Users who need manual instrumentation should reference the "Datadog.Trace" packa
          be locked at Major.0.0.0 and is defined in AssemblyInfo.cs -->
     <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
 
-    <!-- Remove the Datadog.Trace.AspNet.dll assembly from the output and hide inapplicable warning (https://docs.microsoft.com/en-us/nuget/reference/errors-and-warnings/nu5128) -->
     <IncludeBuildOutput>false</IncludeBuildOutput>
     <NoWarn>$(NoWarn);NU5128</NoWarn>
   </PropertyGroup>
