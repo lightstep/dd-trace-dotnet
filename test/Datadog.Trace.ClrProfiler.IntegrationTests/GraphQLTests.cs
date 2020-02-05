@@ -31,24 +31,24 @@ namespace Datadog.Trace.ClrProfiler.IntegrationTests
             _expectedGraphQLExecuteSpanCount = 0;
 
             // SUCCESS: query using GET
-            CreateGraphQLRequestsAndExpectations(url: "/graphql?query=" + WebUtility.UrlEncode("query{hero{name appearsIn}}"), httpMethod: "GET", graphQLRequestBody: null, graphQLOperationType: "Query", graphQLOperationName: null, graphQLSource: "query{hero{name appearsIn} }");
+            CreateGraphQLRequestsAndExpectations(url: "/graphql?query=" + WebUtility.UrlEncode("query{hero{name appearsIn}}"), httpMethod: "GET", resourceName: "Query operation", graphQLRequestBody: null, graphQLOperationType: "Query", graphQLOperationName: null, graphQLSource: "query{hero{name appearsIn} }");
 
             // SUCCESS: query using POST (default)
-            CreateGraphQLRequestsAndExpectations(url: "/graphql", httpMethod: "POST", graphQLRequestBody: @"{""query"":""query HeroQuery{hero {name appearsIn}}"",""operationName"": ""HeroQuery""}", graphQLOperationType: "Query", graphQLOperationName: "HeroQuery", graphQLSource: "query HeroQuery{hero{name appearsIn}}");
+            CreateGraphQLRequestsAndExpectations(url: "/graphql", httpMethod: "POST", resourceName: "Query HeroQuery", graphQLRequestBody: @"{""query"":""query HeroQuery{hero {name appearsIn}}"",""operationName"": ""HeroQuery""}", graphQLOperationType: "Query", graphQLOperationName: "HeroQuery", graphQLSource: "query HeroQuery{hero{name appearsIn}}");
 
             // SUCCESS: mutation
-            CreateGraphQLRequestsAndExpectations(url: "/graphql", httpMethod: "POST", graphQLRequestBody: @"{""query"":""mutation AddBobaFett($human:HumanInput!){createHuman(human: $human){id name}}"",""variables"":{""human"":{""name"": ""Boba Fett""}}}", graphQLOperationType: "Mutation", graphQLOperationName: "AddBobaFett", graphQLSource: "mutation AddBobaFett($human:HumanInput!){createHuman(human: $human){id name}}");
+            CreateGraphQLRequestsAndExpectations(url: "/graphql", httpMethod: "POST", resourceName: "Mutation AddBobaFett", graphQLRequestBody: @"{""query"":""mutation AddBobaFett($human:HumanInput!){createHuman(human: $human){id name}}"",""variables"":{""human"":{""name"": ""Boba Fett""}}}", graphQLOperationType: "Mutation", graphQLOperationName: "AddBobaFett", graphQLSource: "mutation AddBobaFett($human:HumanInput!){createHuman(human: $human){id name}}");
 
             // SUCCESS: subscription
-            CreateGraphQLRequestsAndExpectations(url: "/graphql", httpMethod: "POST", graphQLRequestBody: @"{""query"":""subscription HumanAddedSub{humanAdded{name}}""}", graphQLOperationType: "Subscription", graphQLOperationName: "HumanAddedSub", graphQLSource: "subscription HumanAddedSub{humanAdded{name}}");
+            CreateGraphQLRequestsAndExpectations(url: "/graphql", httpMethod: "POST", resourceName: "Subscription HumanAddedSub", graphQLRequestBody: @"{ ""query"":""subscription HumanAddedSub{humanAdded{name}}""}", graphQLOperationType: "Subscription", graphQLOperationName: "HumanAddedSub", graphQLSource: "subscription HumanAddedSub{humanAdded{name}}");
 
             // TODO: When parse is implemented, add a test that fails 'parse' step
 
             // FAILURE: query fails 'validate' step
-            CreateGraphQLRequestsAndExpectations(url: "/graphql", httpMethod: "POST", graphQLRequestBody: @"{""query"":""query HumanError{human(id:1){name apearsIn}}""}", graphQLOperationType: "Query", graphQLOperationName: null, failsValidation: true, graphQLSource: "query HumanError{human(id:1){name apearsIn}}");
+            CreateGraphQLRequestsAndExpectations(url: "/graphql", httpMethod: "POST", resourceName: "Query HumanError", graphQLRequestBody: @"{""query"":""query HumanError{human(id:1){name apearsIn}}""}", graphQLOperationType: "Query", graphQLOperationName: null, failsValidation: true, graphQLSource: "query HumanError{human(id:1){name apearsIn}}");
 
             // FAILURE: query fails 'execute' step
-            CreateGraphQLRequestsAndExpectations(url: "/graphql", httpMethod: "POST", graphQLRequestBody: @"{""query"":""subscription NotImplementedSub{throwNotImplementedException{name}}""}", graphQLOperationType: "Subscription", graphQLOperationName: "NotImplementedSub", graphQLSource: "subscription NotImplementedSub{throwNotImplementedException{name}}", failsExecution: true);
+            CreateGraphQLRequestsAndExpectations(url: "/graphql", httpMethod: "POST", resourceName: "Subscription NotImplementedSub", graphQLRequestBody: @"{""query"":""subscription NotImplementedSub{throwNotImplementedException{name}}""}", graphQLOperationType: "Subscription", graphQLOperationName: "NotImplementedSub", graphQLSource: "subscription NotImplementedSub{throwNotImplementedException{name}}", failsExecution: true);
 
             // TODO: When parse is implemented, add a test that fails 'resolve' step
         }
@@ -113,20 +113,20 @@ namespace Datadog.Trace.ClrProfiler.IntegrationTests
                 }
 
                 var spans = graphQLValidateSpans.Concat(graphQLExecuteSpans).ToList();
-                WebServerTestHelpers.AssertExpectationsMet(_expectations, spans);
+                SpanTestHelpers.AssertExpectationsMet(_expectations, spans);
             }
         }
 
         private static void CreateGraphQLRequestsAndExpectations(
             string url,
             string httpMethod,
+            string resourceName,
             string graphQLRequestBody,
             string graphQLOperationType,
             string graphQLOperationName,
             string graphQLSource,
             bool failsValidation = false,
-            bool failsExecution = false,
-            Func<MockTracerAgent.Span, List<string>> additionalCheck = null)
+            bool failsExecution = false)
         {
             _requests.Add(new RequestInfo()
             {
@@ -136,15 +136,9 @@ namespace Datadog.Trace.ClrProfiler.IntegrationTests
             });
 
             // Expect a 'validate' span
-            _expectations.Add(new GraphQLSpanExpectation
+            _expectations.Add(new GraphQLSpanExpectation("Samples.GraphQL-graphql", _graphQLValidateOperationName, _graphQLValidateOperationName)
             {
                 OriginalUri = url,
-                OperationName = _graphQLValidateOperationName,
-                ResourceName = _graphQLValidateOperationName,
-                ServiceName = "Samples.GraphQL-graphql",
-                Type = SpanTypes.GraphQL,
-                CustomAssertion = additionalCheck,
-
                 GraphQLRequestBody = graphQLRequestBody,
                 GraphQLOperationType = null,
                 GraphQLOperationName = graphQLOperationName,
@@ -156,15 +150,9 @@ namespace Datadog.Trace.ClrProfiler.IntegrationTests
             if (failsValidation) { return; }
 
             // Expect an 'execute' span
-            _expectations.Add(new GraphQLSpanExpectation
+            _expectations.Add(new GraphQLSpanExpectation("Samples.GraphQL-graphql", _graphQLExecuteOperationName, resourceName)
             {
                 OriginalUri = url,
-                OperationName = _graphQLExecuteOperationName,
-                ResourceName = _graphQLExecuteOperationName,
-                ServiceName = "Samples.GraphQL-graphql",
-                Type = SpanTypes.GraphQL,
-                CustomAssertion = additionalCheck,
-
                 GraphQLRequestBody = graphQLRequestBody,
                 GraphQLOperationType = graphQLOperationType,
                 GraphQLOperationName = graphQLOperationName,
