@@ -8,7 +8,7 @@ mkdir -p $DIR/../deploy/linux
 cp $DIR/../integrations.json $DIR/../src/Datadog.Trace.ClrProfiler.Native/bin/Debug/x64/
 
 cd $DIR/../deploy/linux
-for pkgtype in deb rpm tar ; do
+for pkgtype in $PKGTYPES ; do
     fpm \
         -f \
         -s dir \
@@ -22,5 +22,10 @@ for pkgtype in deb rpm tar ; do
         integrations.json
 done
 
-gzip -f lightstep-dotnet-apm.tar
-mv lightstep-dotnet-apm.tar.gz lightstep-dotnet-apm-$VERSION.tar.gz
+gzip -f datadog-dotnet-apm.tar
+
+if [ -z "${MUSL-}" ]; then
+  mv lightstep-dotnet-apm.tar.gz lightstep-dotnet-apm-$VERSION.tar.gz
+else
+  mv lightstep-dotnet-apm.tar.gz lightstep-dotnet-apm-$VERSION-musl.tar.gz
+fi
