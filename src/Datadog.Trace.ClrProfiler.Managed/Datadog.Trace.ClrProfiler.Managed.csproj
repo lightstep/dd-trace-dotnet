@@ -1,11 +1,11 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <RootNamespace>Datadog.Trace.ClrProfiler</RootNamespace>
 
     <!-- NuGet -->
     <PackageId>LightStep.Trace.ClrProfiler.Managed</PackageId>
-    <Version>1.13.2</Version>
+    <Version>1.13.3-prerelease</Version>
     <Title>LightStep's Datadog APM fork - ClrProfiler</Title>
     <Description>
       OBSOLETE. This package is deprecated and exists only for backwards compatibility.
