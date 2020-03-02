@@ -166,5 +166,62 @@ namespace Datadog.Trace.Logging
 
             return logDirectory;
         }
+
+        private static string GetLogDirectory()
+        {
+            var nativeLogFile = Environment.GetEnvironmentVariable(ConfigurationKeys.ProfilerLogPath);
+            string logDirectory = null;
+
+            if (!string.IsNullOrEmpty(nativeLogFile))
+            {
+                logDirectory = Path.GetDirectoryName(nativeLogFile);
+            }
+
+            // This entire block may throw a SecurityException if not granted the System.Security.Permissions.FileIOPermission
+            // because of the following API calls
+            //   - Directory.Exists
+            //   - Environment.GetFolderPath
+            //   - Path.GetTempPath
+            if (logDirectory == null)
+            {
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                {
+                    var windowsDefaultDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), @"Datadog .NET Tracer", "logs");
+                    if (Directory.Exists(windowsDefaultDirectory))
+                    {
+                        logDirectory = windowsDefaultDirectory;
+                    }
+                }
+                else
+                {
+                    // either Linux or OS X
+                    if (Directory.Exists(NixDefaultDirectory))
+                    {
+                        logDirectory = NixDefaultDirectory;
+                    }
+                    else
+                    {
+                        try
+                        {
+                            var di = Directory.CreateDirectory(NixDefaultDirectory);
+                            logDirectory = NixDefaultDirectory;
+                        }
+                        catch
+                        {
+                            // Unable to create the directory meaning that the user
+                            // will have to create it on their own.
+                        }
+                    }
+                }
+            }
+
+            if (logDirectory == null)
+            {
+                // Last effort at writing logs
+                logDirectory = Path.GetTempPath();
+            }
+
+            return logDirectory;
+        }
     }
 }
