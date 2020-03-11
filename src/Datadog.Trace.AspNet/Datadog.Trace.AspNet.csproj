@@ -4,7 +4,7 @@
     <TargetFrameworks>net45</TargetFrameworks>
 
     <!-- NuGet -->
-    <Version>1.14.0</Version>
+    <Version>1.14.1-prerelease</Version>
     <Title>Datadog APM Tracing for ASP.NET</Title>
     <Description>
       OBSOLETE. This package is deprecated and exists only for backwards compatibility.
