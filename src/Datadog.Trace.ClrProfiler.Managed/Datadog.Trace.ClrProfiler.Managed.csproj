@@ -26,6 +26,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Datadog.Trace.ClrProfiler.Managed.Core\Datadog.Trace.ClrProfiler.Managed.Core.csproj" />
     <ProjectReference Include="..\Datadog.Trace\Datadog.Trace.csproj" />
   </ItemGroup>
 
@@ -40,6 +41,7 @@
     <Reference Include="System.ServiceModel" />
 
     <ProjectReference Include="..\Datadog.Trace.AspNet\Datadog.Trace.AspNet.csproj" PrivateAssets="all" />
+    <ProjectReference Include="..\Datadog.Trace.AspNet.Loader\Datadog.Trace.AspNet.Loader.csproj" PrivateAssets="all" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net45' ">
