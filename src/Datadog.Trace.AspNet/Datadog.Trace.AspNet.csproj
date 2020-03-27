@@ -6,11 +6,14 @@
     <!-- NuGet -->
     <id>LightStep.Trace.AspNet</id>
     <Version>1.15.0</Version>
-    <Title>LightStep APM Tracing for ASP.NET</Title>
+    <Title>LightStep fork of Datadog APM Tracing for ASP.NET</Title>
     <Description>
-      OBSOLETE. This package is deprecated and exists only for backwards compatibility.
-      ASP.NET is now automatically instrumented. If your project references this package
-      or Datadog.Trace.AspNet, you can remove them.
+DEPRECATED. This package exists only for backwards compatibility. If your project references this package ("LightStep.Trace.AspNet") or
+"LightStep.Trace.ClrProfiler.Managed", you can remove them both.
+
+.NET Core applications no longer require any NuGet package to enable automatic instrumentation.
+
+Users who need manual instrumentation should reference the "LightStep.Trace" package.
     </Description>
     <!-- Allow the GenerateAssemblyInfo task in the .NET SDK to generate all
          assembly attributes except for the AssemblyVersionAttribute. This will

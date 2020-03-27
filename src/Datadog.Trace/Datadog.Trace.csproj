@@ -4,7 +4,7 @@
     <!-- NuGet -->
     <id>LightStep.Trace</id>
     <Version>1.15.0</Version>
-    <Title>LightStep's Datadog APM fork</Title>
+    <Title>LightStep fork of Datadog APM</Title>
     <Description>Manual instrumentation library for Datadog APM</Description>
   </PropertyGroup>
 
