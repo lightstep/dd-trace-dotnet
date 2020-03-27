@@ -686,7 +686,6 @@ HRESULT CorProfiler::ProcessReplacementCalls(
       }
       
 
-
       auto method_def_md_token = target.id;
 
       if (target.is_generic) {
