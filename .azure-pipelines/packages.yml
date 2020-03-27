@@ -6,14 +6,14 @@ pr: none
 
 variables:
   buildConfiguration: release
-  dotnetCoreSdkVersion: 3.0.x
+  dotnetCoreSdkVersion: 3.1.x
   publishOutput: $(Build.SourcesDirectory)/src/bin/managed-publish
 
 jobs:
 
 #### NuGet packages and Windows msi installer
 
-- job: nuget_and_windows_msi
+- job: nuget_and_windows_msi_and_home
   strategy:
     matrix:
       x64:
@@ -28,7 +28,7 @@ jobs:
 
   steps:
 
-  - task: gittools.gitversion.gitversion-task.GitVersion@5
+  - task: gittools.gitversion.gitversion-task.GitVersion@4
     displayName: GitVersion
     inputs:
       preferBundledVersion: false
@@ -63,7 +63,7 @@ jobs:
     condition: and(succeeded(), eq(variables['nugetPack'], 'true'))
     inputs:
       command: pack
-      packagesToPack: src/*.Trace/*.csproj;src/*.Managed/*.csproj;src/*.OpenTracing/*.csproj;
+      packagesToPack: src/Datadog.Trace/Datadog.Trace.csproj;src/Datadog.Trace.OpenTracing/Datadog.Trace.OpenTracing.csproj
       packDirectory: nuget-output
       configuration: $(buildConfiguration)
 
@@ -80,14 +80,31 @@ jobs:
       solution: Datadog.Trace.proj
       platform: $(buildPlatform)
       configuration: $(buildConfiguration)
-      msbuildArguments: /t:msi /p:InstallerVersion=1.9.0;OutputName=lightstep-dotnet-apm-1.9.0-$(buildPlatform);RunWixToolsOutOfProc=true
+      msbuildArguments: /t:msi /p:RunWixToolsOutOfProc=true
+      maximumCpuCount: true
+      
+  - task: MSBuild@1
+    displayName: msbuild tracer-home
+    condition: eq(variables['buildPlatform'], 'x64')
+    inputs:
+      solution: Datadog.Trace.proj
+      platform: $(buildPlatform)
+      configuration: $(buildConfiguration)
+      msbuildArguments: /t:CreateHomeDirectory
       maximumCpuCount: true
 
   - task: PublishPipelineArtifact@0
     displayName: publish msi artifact
     inputs:
       artifactName: windows-msi-$(buildPlatform)
-      targetPath: deploy/Datadog.Trace.ClrProfiler.WindowsInstaller/bin/en-us
+      targetPath: deploy/Datadog.Trace.ClrProfiler.WindowsInstaller/bin/$(buildConfiguration)/$(buildPlatform)/en-us
+
+  - task: PublishPipelineArtifact@0
+    displayName: publish tracerhome artifact
+    condition: eq(variables['buildPlatform'], 'x64')
+    inputs:
+      artifactName: windows-tracer-home
+      targetPath: src/bin/windows-tracer-home.zip
 
 #### Linux packages
 
@@ -141,4 +158,56 @@ jobs:
     displayName: publish artifacts
     inputs:
       artifactName: linux-packages
+      targetPath: deploy/linux
+
+- job: linux_alpine_packages
+
+  pool:
+    vmImage: ubuntu-16.04
+
+  steps:
+  - task: UseDotNet@2
+    displayName: install dotnet core sdk
+    inputs:
+      version: $(dotnetCoreSdkVersion)
+
+  - task: DotNetCoreCLI@2
+    displayName: dotnet restore
+    inputs:
+      command: restore
+      projects: src/**/*.csproj
+
+  - task: DotNetCoreCLI@2
+    displayName: dotnet build
+    inputs:
+      command: build
+      projects: src/**/*.csproj
+      arguments: --configuration $(buildConfiguration)
+
+  - task: DotNetCoreCLI@2
+    displayName: dotnet publish Datadog.Trace.ClrProfiler.Managed --framework netstandard2.0
+    inputs:
+      command: publish
+      publishWebProjects: false
+      modifyOutputPath: false
+      zipAfterPublish: false
+      projects: src/Datadog.Trace.ClrProfiler.Managed/Datadog.Trace.ClrProfiler.Managed.csproj
+      arguments: --configuration $(buildConfiguration) --framework netstandard2.0 --output $(publishOutput)/netstandard2.0
+
+  - task: DockerCompose@0
+    displayName: docker-compose run Profiler.Alpine
+    inputs:
+      containerregistrytype: Container Registry
+      dockerComposeCommand: run Profiler.Alpine
+
+  - task: DockerCompose@0
+    displayName: docker-compose run package.alpine
+    inputs:
+      containerregistrytype: Container Registry
+      dockerComposeCommand: run package.alpine
+
+  - task: PublishPipelineArtifact@0
+    displayName: publish artifacts
+    inputs:
+      artifactName: linux-alpine-packages
       targetPath: deploy/linux
