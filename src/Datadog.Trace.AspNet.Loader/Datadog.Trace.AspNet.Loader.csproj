@@ -5,6 +5,8 @@
     <RootNamespace>Datadog.Trace.AspNet.Loader</RootNamespace>
 
     <!-- NuGet -->
+    <id>LightStep.Trace.AspNet.Loader</id>
+    <Title>LightStep APM Tracing for ASP.NET</Title>
     <Version>1.15.0</Version>
     <IsPackable>false</IsPackable>
 

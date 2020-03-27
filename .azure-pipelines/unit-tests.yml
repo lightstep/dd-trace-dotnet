@@ -1,9 +1,8 @@
 trigger:
+  batch: 'true'
   branches:
     include:
-      - '*'
-    exclude:
-      - refs/pull/*/head
+      - refs/heads/*
   paths:
     exclude:
       - docs/*
@@ -11,7 +10,8 @@ trigger:
 
 variables:
   buildConfiguration: Debug
-  packageFeed: /ffc32c57-3e0e-4e8f-8633-a7ad01df2e45
+  dotnetCoreSdkVersion: 3.0.x
+  dotnetCore21SdkVersion: 2.1.x
 
 jobs:
 
@@ -28,22 +28,16 @@ jobs:
 
   steps:
   - task: UseDotNet@2
-    displayName: install dotnet core runtime 2.1
-    inputs:
-      packageType: runtime
-      version: 2.1.x
-
-  - task: UseDotNet@2
-    displayName: install dotnet core runtime 3.0
-    inputs:
-      packageType: runtime
-      version: 3.0.x
-
-  - task: UseDotNet@2
-    displayName: install dotnet core sdk 3.1
+    displayName: install dotnet core 2.1 sdk
     inputs:
       packageType: sdk
-      version: 3.1.x
+      version: $(dotnetCore21SdkVersion)
+
+  - task: UseDotNet@2
+    displayName: install dotnet core 3.0 sdk
+    inputs:
+      packageType: sdk
+      version: $(dotnetCoreSdkVersion)
 
   - task: DotNetCoreCLI@2
     displayName: dotnet restore
@@ -52,7 +46,6 @@ jobs:
       projects: |
         src/**/*.csproj
         test/**/*.Tests.csproj
-      vstsFeed: $(packageFeed)
 
   - task: DotNetCoreCLI@2
     displayName: dotnet build
@@ -82,12 +75,11 @@ jobs:
     vmImage: windows-2019
 
   steps:
-
   - task: UseDotNet@2
-    displayName: install dotnet core sdk 3.1
+    displayName: install dotnet core 2.1 sdk
     inputs:
       packageType: sdk
-      version: 3.1.x
+      version: $(dotnetCore21SdkVersion)
 
   - task: DotNetCoreCLI@2
     displayName: dotnet build
@@ -102,7 +94,6 @@ jobs:
     displayName: nuget restore
     inputs:
       restoreSolution: Datadog.Trace.Native.sln
-      vstsFeed: $(packageFeed)
       verbosityRestore: Normal
 
   - task: MSBuild@1
