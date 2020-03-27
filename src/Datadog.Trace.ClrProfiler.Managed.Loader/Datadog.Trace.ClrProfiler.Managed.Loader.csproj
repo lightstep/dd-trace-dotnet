@@ -9,6 +9,7 @@
     <!-- NuGet -->
     <Id>LightStep.Trace.ClrProfiler.Managed.Loader</Id>
     <Version>1.15.0</Version>
+    <IsPackable>false</IsPackable>
   </PropertyGroup>
 
 </Project>
