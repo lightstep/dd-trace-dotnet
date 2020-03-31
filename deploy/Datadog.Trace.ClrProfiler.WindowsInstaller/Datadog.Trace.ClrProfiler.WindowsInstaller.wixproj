@@ -14,17 +14,11 @@
     <IntermediateOutputPath>obj\$(Configuration)\$(Platform)\</IntermediateOutputPath>
     <SuppressPdbOutput>True</SuppressPdbOutput>
     <DefineSolutionProperties>false</DefineSolutionProperties>
-    <!-- Custom InstallerVersion property for the generated installer,
-         value is set to build constant InstallerVersion below and
-         accessed as $(var.InstallerVersion) from WiX files.
-         This is the default value if one is not specified when building. -->
-    <InstallerVersion Condition="'$(InstallerVersion)'==''">0.1</InstallerVersion>
-    <!-- default msi filename if not specified -->
-    <OutputName Condition="'$(OutputName)'==''">lightstep-dotnet-apm-$(InstallerVersion)-$(Platform)-$(Configuration)</OutputName>
+    <OutputName>lightstep-dotnet-apm-1.15.0-$(Platform)</OutputName>
   </PropertyGroup>
 
   <PropertyGroup>
-    <DefineConstants>InstallerVersion=1.14.3</DefineConstants>
+    <DefineConstants>InstallerVersion=1.15.0</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">

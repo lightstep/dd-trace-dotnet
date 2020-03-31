@@ -49,10 +49,10 @@ namespace NugetProfilerVersionMismatch.TypeLoadException
                     createTable.CommandText = @"
     DROP TABLE IF EXISTS employee;
     CREATE TABLE employee (
-        employee_id SERIAL,
-        name varchar(45) NOT NULL,
-        birth_date varchar(450) NOT NULL,
-      PRIMARY KEY (employee_id)
+        employee_id SERIAL,  
+        name varchar(45) NOT NULL,  
+        birth_date varchar(450) NOT NULL,  
+      PRIMARY KEY (employee_id)  
     )";
 
                     createTable.ExecuteNonQuery();

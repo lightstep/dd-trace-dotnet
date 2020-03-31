@@ -2,7 +2,7 @@
 set -euxo pipefail
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
-VERSION=1.14.3
+VERSION=1.15.0
 
 mkdir -p $DIR/../deploy/linux
 cp $DIR/../integrations.json $DIR/../src/Datadog.Trace.ClrProfiler.Native/bin/Debug/x64/
@@ -29,5 +29,5 @@ gzip -f lightstep-dotnet-apm.tar
 if [ -z "${MUSL-}" ]; then
   mv lightstep-dotnet-apm.tar.gz lightstep-dotnet-apm-$VERSION.tar.gz
 else
-  mv lightstep-dotnet-apm.tar.gz lightstep-dotnet-apm-$VERSION-misl.tar.gz
+  mv lightstep-dotnet-apm.tar.gz lightstep-dotnet-apm-$VERSION-musl.tar.gz
 fi

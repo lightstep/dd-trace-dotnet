@@ -684,7 +684,7 @@ HRESULT CorProfiler::ProcessReplacementCalls(
           " name=", caller.type.name, ".", caller.name, "()");
         continue;
       }
-
+      
 
       auto method_def_md_token = target.id;
 
