@@ -8,7 +8,7 @@
     <!-- NuGet packages -->
     <IsPackable>true</IsPackable>
     <PackageIconUrl>https://github.com/LightStep/ls-trace-dotnet/raw/master/ls128x128.png</PackageIconUrl>
-    <PackageIcon>ls128x128.png</PackageIcon>
+    <PackageIcon>packageIcon.png</PackageIcon>
     <PackageProjectUrl>hhttps://docs.lightstep.com/docs/net-auto-instrumentation</PackageProjectUrl>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
