@@ -4,7 +4,7 @@
     <TargetFrameworks>net45</TargetFrameworks>
 
     <!-- NuGet -->
-    <id>LightStep.Trace.AspNet</id>
+    <PackageId>LightStep.Trace.AspNet</PackageId>
     <Version>1.15.0</Version>
     <Title>LightStep fork of Datadog APM Tracing for ASP.NET</Title>
     <Description>

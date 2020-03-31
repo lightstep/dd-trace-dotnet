@@ -4,7 +4,7 @@
     <RootNamespace>Datadog.Trace.ClrProfiler</RootNamespace>
 
     <!-- NuGet -->
-    <id>LightStep.Trace.ClrProfiler.Managed</id>
+    <PackageId>LightStep.Trace.ClrProfiler.Managed</PackageId>
     <Version>1.15.0</Version>
     <Title>LightStep fork of Datadog APM - ClrProfiler</Title>
     <Description>
