@@ -9,7 +9,7 @@
     <IsPackable>true</IsPackable>
     <PackageIconUrl>https://github.com/LightStep/ls-trace-dotnet/raw/master/ls128x128.png</PackageIconUrl>
     <PackageIcon>packageIcon.png</PackageIcon>
-    <PackageProjectUrl>hhttps://docs.lightstep.com/docs/net-auto-instrumentation</PackageProjectUrl>
+    <PackageProjectUrl>https://docs.lightstep.com/docs/net-auto-instrumentation</PackageProjectUrl>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageReleaseNotes>See release notes at https://github.com/lightstep/ls-trace-dotnet/releases</PackageReleaseNotes>
